@@ -1,0 +1,7 @@
+metric,numerator,denominator,value,ci95_lower,ci95_upper,threshold,pass
+sensitivity,9,10,0.9,0.5958499732047615,0.9821237869049271,0.8,true
+specificity,10,10,1.0,0.7224672001371107,0.9999999999999999,0.9,true
+parse_success,20,20,1.0,0.8388748419471806,1.0,1.0,true
+grounded_description_accuracy,9,10,0.9,0.5958499732047615,0.9821237869049271,0.8,true
+cross_bin_sensitivity,4,5,0.8,0.37553462976252533,0.9637758913675698,0.6,true
+within_bin_sensitivity,5,5,1.0,0.5655175352168251,1.0,0.6,true

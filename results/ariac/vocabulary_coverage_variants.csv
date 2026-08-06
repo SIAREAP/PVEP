@@ -1,0 +1,41 @@
+trial_name,condition,strict_symbolic_applicable,grounding_exact_match,online_status,online_full_score,actual_score,protocol_max_score,parser_output,parser_pddl_applicable,parser_full_score
+normal1,exact_canonical,1,1,submitted,1,13,13,place purple sensor in quadrant 2; place purple pump in quadrant 4; place green regulator in quadrant 1,1,1
+normal1,exact_paraphrase,1,1,submitted,1,13,13,place green regulator in quadrant 1; place purple pump in quadrant 4; place purple sensor in quadrant 2,1,1
+normal1,semantic_alias,0,1,submitted,1,13,13,place purple sensor in quadrant 2; place purple pump in quadrant 4; place green regulator in quadrant 1,1,1
+normal1,compositional_alias,0,1,submitted,1,13,13,place green regulator in quadrant 1; place purple pump in quadrant 4; place purple sensor in quadrant 2,1,1
+normal1,visual_deictic,0,0,submitted,0,4,13,place purple pump in quadrant 2; place purple sensor in quadrant 4; place green regulator in quadrant 1,1,0
+normal2,exact_canonical,1,1,submitted,1,13,13,place blue pump in quadrant 3; place blue regulator in quadrant 4; place purple sensor in quadrant 1,1,1
+normal2,exact_paraphrase,1,1,submitted,1,13,13,place purple sensor in quadrant 1; place blue regulator in quadrant 4; place blue pump in quadrant 3,1,1
+normal2,semantic_alias,0,1,submitted,1,13,13,place blue pump in quadrant 3; place blue regulator in quadrant 4; place purple sensor in quadrant 1,1,1
+normal2,compositional_alias,0,1,submitted,1,13,13,place purple sensor in quadrant 1; place blue regulator in quadrant 4; place blue pump in quadrant 3,1,1
+normal2,visual_deictic,0,0,feasibility_failed,0,0,13,place blue pump in quadrant 3; place blue sensor in quadrant 4; place purple sensor in quadrant 1,0,0
+normal3,exact_canonical,1,1,submitted,1,13,13,place red battery in quadrant 2; place red pump in quadrant 3; place purple sensor in quadrant 1,1,1
+normal3,exact_paraphrase,1,1,submitted,1,13,13,place purple sensor in quadrant 1; place red pump in quadrant 3; place red battery in quadrant 2,1,1
+normal3,semantic_alias,0,1,submitted,1,13,13,place red battery in quadrant 2; place red pump in quadrant 3; place purple sensor in quadrant 1,1,1
+normal3,compositional_alias,0,1,submitted,1,13,13,place purple sensor in quadrant 1; place red pump in quadrant 3; place red battery in quadrant 2,1,1
+normal3,visual_deictic,0,1,submitted,1,13,13,place red battery in quadrant 2; place orange pump in quadrant 3; place red battery in quadrant 1,0,0
+normal4,exact_canonical,1,1,submitted,1,17,17,place green sensor in quadrant 2; place purple sensor in quadrant 3; place blue pump in quadrant 1; place orange regulator in quadrant 4,1,1
+normal4,exact_paraphrase,1,1,submitted,1,17,17,place orange regulator in quadrant 4; place blue pump in quadrant 1; place purple sensor in quadrant 3; place green sensor in quadrant 2,1,1
+normal4,semantic_alias,0,1,submitted,1,17,17,place green sensor in quadrant 2; place purple sensor in quadrant 3; place blue pump in quadrant 1; place orange regulator in quadrant 4,1,1
+normal4,compositional_alias,0,1,submitted,1,17,17,place orange regulator in quadrant 4; place blue pump in quadrant 1; place purple sensor in quadrant 3; place green sensor in quadrant 2,1,1
+normal4,visual_deictic,0,0,feasibility_failed,0,0,17,place orange sensor in quadrant 2; place blue pump in quadrant 3; place purple regulator in quadrant 1; place green sensor in quadrant 4,0,0
+normal5,exact_canonical,1,1,submitted,1,9,9,place purple sensor in quadrant 1; place green regulator in quadrant 4,1,1
+normal5,exact_paraphrase,1,1,submitted,1,9,9,place green regulator in quadrant 4; place purple sensor in quadrant 1,1,1
+normal5,semantic_alias,0,1,submitted,1,9,9,place purple sensor in quadrant 1; place green regulator in quadrant 4,1,1
+normal5,compositional_alias,0,1,submitted,1,9,9,place green regulator in quadrant 4; place purple sensor in quadrant 1,1,1
+normal5,visual_deictic,0,0,feasibility_failed,0,0,9,place purple regulator in quadrant 1; place green regulator in quadrant 4,0,0
+normal6,exact_canonical,1,1,submitted,1,13,13,place purple regulator in quadrant 1; place green pump in quadrant 2; place purple battery in quadrant 4,1,1
+normal6,exact_paraphrase,1,1,submitted,1,13,13,place purple battery in quadrant 4; place green pump in quadrant 2; place purple regulator in quadrant 1,1,1
+normal6,semantic_alias,0,1,submitted,1,13,13,place purple regulator in quadrant 1; place green pump in quadrant 2; place purple battery in quadrant 4,1,1
+normal6,compositional_alias,0,1,submitted,1,13,13,place purple battery in quadrant 4; place green pump in quadrant 2; place purple regulator in quadrant 1,1,1
+normal6,visual_deictic,0,0,feasibility_failed,0,0,13,place purple regulator in quadrant 1; place green pump in quadrant 2; place purple battery in quadrant 4,1,1
+normal7,exact_canonical,1,1,submitted,1,9,9,place orange regulator in quadrant 2; place green regulator in quadrant 4,1,1
+normal7,exact_paraphrase,1,1,submitted,1,9,9,place green regulator in quadrant 4; place orange regulator in quadrant 2,1,1
+normal7,semantic_alias,0,1,submitted,1,9,9,place orange regulator in quadrant 2; place green regulator in quadrant 4,1,1
+normal7,compositional_alias,0,1,submitted,1,9,9,place green regulator in quadrant 4; place orange regulator in quadrant 2,1,1
+normal7,visual_deictic,0,0,feasibility_failed,0,0,9,place orange regulator in quadrant 2; place green regulator in quadrant 4,1,1
+normal8,exact_canonical,1,1,submitted,1,9,9,place purple sensor in quadrant 4; place red sensor in quadrant 1,1,1
+normal8,exact_paraphrase,1,1,submitted,1,9,9,place red sensor in quadrant 1; place purple sensor in quadrant 4,1,1
+normal8,semantic_alias,0,1,submitted,1,9,9,place purple sensor in quadrant 4; place red sensor in quadrant 1,1,1
+normal8,compositional_alias,0,1,submitted,1,9,9,place red sensor in quadrant 1; place purple sensor in quadrant 4,1,1
+normal8,visual_deictic,0,1,submitted,1,9,9,place purple regulator in quadrant 4; place red regulator in quadrant 1,0,0
