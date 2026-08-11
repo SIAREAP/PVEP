@@ -12,10 +12,19 @@ MANIFEST = ROOT / "MANIFEST.sha256"
 EXCLUDED_PARTS = {".git", ".venv", "__pycache__", "new_submission_pack", "previews"}
 EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
 GENERATED_FILES = {
-    "paper/fig2_cross_domain_decoupling.pdf",
-    "paper/fig3_mechanism.pdf",
-    "paper/fig4_necessity.pdf",
-    "paper/fig5_scope2x2.pdf",
+    "paper/fig2_ariac.pdf",
+    "paper/fig3_tv.pdf",
+    "paper/fig4_rotor.pdf",
+    "paper/fig5_coverage_scaling.pdf",
+    "paper/fig6_scope_intervention.pdf",
+    "paper/figure_scripts/fig2_ariac.pdf",
+    "paper/figure_scripts/fig3_tv.pdf",
+    "paper/figure_scripts/fig4_rotor.pdf",
+    "paper/figure_scripts/fig5_coverage_scaling.pdf",
+    "paper/figure_scripts/fig6_scope_intervention.pdf",
+    "paper/figure_scripts/_preview_fig2_ariac.png",
+    "paper/figure_scripts/_preview_fig3_tv.png",
+    "paper/figure_scripts/_preview_fig4_rotor.png",
     "paper/figure_scripts/figure_data_audit.json",
 }
 

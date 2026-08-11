@@ -10,3 +10,4 @@ __pycache__/
 *.out
 paper/new_submission_pack/
 paper/figure_scripts/previews/
+paper/figure_scripts/_preview_*.png

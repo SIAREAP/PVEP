@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recompute the repository-frozen ARIAC initial-admissibility result."""
+"""Recompute the repository-frozen ARIAC first-check-admissibility result."""
 
 from __future__ import annotations
 

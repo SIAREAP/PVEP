@@ -1,5 +1,5 @@
 {
-  "policy": "All plotted values are derived from the released trial-level tables under results/.",
+  "policy": "All plotted values are derived from the curated results directory; publication assets supply panel-a imagery only.",
   "sources": {
     "ariac_sweep": {
       "path": "results/ariac/Vbinary_sweep_per_order.csv",
@@ -36,10 +36,41 @@
     "rotor_corruption": {
       "path": "results/rotor/table2_perturbation_sweep.csv",
       "sha256": "db530b0feb22b41f4438bc5b04944cf43077493c5ca8913862da573f64ffb649"
+    },
+    "rotor_scope": {
+      "path": "results/rotor/rotor_scope2x2.csv",
+      "sha256": "df7975dd603a35ccc71eb644d28aefb773707cc32a814919527ff52aefaf0dc2"
     }
   },
-  "fig2": {
-    "ariac": [
+  "fig2_ariac": {
+    "nominal_ablation": [
+      {
+        "method": "VLM+NL",
+        "n": 50,
+        "strict_completions": 11
+      },
+      {
+        "method": "VLM+NL+repair",
+        "n": 50,
+        "strict_completions": 32
+      },
+      {
+        "method": "VLM+PDDL",
+        "n": 50,
+        "strict_completions": 11
+      },
+      {
+        "method": "VLM+PDDL+repair",
+        "n": 50,
+        "strict_completions": 32
+      },
+      {
+        "method": "PVEP",
+        "n": 50,
+        "strict_completions": 50
+      }
+    ],
+    "corruption_sweep": [
       {
         "config": "V_binary",
         "epsilon": 0.25,
@@ -171,103 +202,7 @@
         "mean_inspections": 3.48
       }
     ],
-    "tv": [
-      {
-        "epsilon": 0.0,
-        "n": 20,
-        "pass_rate": 0.85,
-        "mean_total_cost": 103.6,
-        "total_cost_population_std": 52.89555746941325,
-        "fasten_violations": 4,
-        "mean_probes": 6.85,
-        "mean_unsafe_fasten": 0.2
-      },
-      {
-        "epsilon": 0.25,
-        "n": 20,
-        "pass_rate": 0.8,
-        "mean_total_cost": 117.8,
-        "total_cost_population_std": 65.08502131827261,
-        "fasten_violations": 5,
-        "mean_probes": 7.5,
-        "mean_unsafe_fasten": 0.25
-      },
-      {
-        "epsilon": 0.5,
-        "n": 20,
-        "pass_rate": 0.75,
-        "mean_total_cost": 124.35,
-        "total_cost_population_std": 68.59830537265479,
-        "fasten_violations": 6,
-        "mean_probes": 8.0,
-        "mean_unsafe_fasten": 0.3
-      },
-      {
-        "epsilon": 0.75,
-        "n": 20,
-        "pass_rate": 0.75,
-        "mean_total_cost": 129.6,
-        "total_cost_population_std": 69.0763345871797,
-        "fasten_violations": 6,
-        "mean_probes": 8.95,
-        "mean_unsafe_fasten": 0.3
-      },
-      {
-        "epsilon": 1.0,
-        "n": 20,
-        "pass_rate": 0.75,
-        "mean_total_cost": 136.3,
-        "total_cost_population_std": 77.95582082179624,
-        "fasten_violations": 7,
-        "mean_probes": 9.3,
-        "mean_unsafe_fasten": 0.35
-      }
-    ],
-    "rotor": [
-      {
-        "epsilon": 0.25,
-        "n": 90,
-        "risk_violations": 0,
-        "mean_margin_c": 18.05979723105437,
-        "min_margin_c": -52.447081385179274,
-        "max_margin_c": 96.25233215484423,
-        "mean_heating_actions": 6.4222222222222225,
-        "mean_inspections": 1.3888888888888888
-      },
-      {
-        "epsilon": 0.5,
-        "n": 90,
-        "risk_violations": 0,
-        "mean_margin_c": 6.659797231054372,
-        "min_margin_c": -63.447081385179274,
-        "max_margin_c": 66.58224171408239,
-        "mean_heating_actions": 8.633333333333333,
-        "mean_inspections": 1.711111111111111
-      },
-      {
-        "epsilon": 0.75,
-        "n": 90,
-        "risk_violations": 0,
-        "mean_margin_c": -1.2513138800567383,
-        "min_margin_c": -74.3313089251157,
-        "max_margin_c": 56.871183649369186,
-        "mean_heating_actions": 9.555555555555555,
-        "mean_inspections": 1.6555555555555554
-      },
-      {
-        "epsilon": 1.0,
-        "n": 90,
-        "risk_violations": 0,
-        "mean_margin_c": -18.39575832450118,
-        "min_margin_c": -74.86901838018542,
-        "max_margin_c": 45.628713360675874,
-        "mean_heating_actions": 12.766666666666667,
-        "mean_inspections": 2.011111111111111
-      }
-    ]
-  },
-  "fig3": {
-    "ariac_mechanism": [
+    "mechanism": [
       {
         "scope": "challenge",
         "n": 20,
@@ -284,7 +219,197 @@
       }
     ]
   },
-  "fig4": {
+  "fig3_tv": {
+    "corruption_sweep": [
+      {
+        "epsilon": 0.0,
+        "n": 20,
+        "pass_rate": 0.85,
+        "unsafe_episode_count": 3,
+        "unsafe_episode_rate": 0.15,
+        "mean_total_cost": 103.6,
+        "total_cost_population_std": 52.89555746941325,
+        "fasten_violations": 4,
+        "mean_probes": 6.85,
+        "mean_unsafe_fasten": 0.2
+      },
+      {
+        "epsilon": 0.25,
+        "n": 20,
+        "pass_rate": 0.8,
+        "unsafe_episode_count": 4,
+        "unsafe_episode_rate": 0.2,
+        "mean_total_cost": 117.8,
+        "total_cost_population_std": 65.08502131827261,
+        "fasten_violations": 5,
+        "mean_probes": 7.5,
+        "mean_unsafe_fasten": 0.25
+      },
+      {
+        "epsilon": 0.5,
+        "n": 20,
+        "pass_rate": 0.75,
+        "unsafe_episode_count": 5,
+        "unsafe_episode_rate": 0.25,
+        "mean_total_cost": 124.35,
+        "total_cost_population_std": 68.59830537265479,
+        "fasten_violations": 6,
+        "mean_probes": 8.0,
+        "mean_unsafe_fasten": 0.3
+      },
+      {
+        "epsilon": 0.75,
+        "n": 20,
+        "pass_rate": 0.75,
+        "unsafe_episode_count": 5,
+        "unsafe_episode_rate": 0.25,
+        "mean_total_cost": 129.6,
+        "total_cost_population_std": 69.0763345871797,
+        "fasten_violations": 6,
+        "mean_probes": 8.95,
+        "mean_unsafe_fasten": 0.3
+      },
+      {
+        "epsilon": 1.0,
+        "n": 20,
+        "pass_rate": 0.75,
+        "unsafe_episode_count": 5,
+        "unsafe_episode_rate": 0.25,
+        "mean_total_cost": 136.3,
+        "total_cost_population_std": 77.95582082179624,
+        "fasten_violations": 7,
+        "mean_probes": 9.3,
+        "mean_unsafe_fasten": 0.35
+      }
+    ],
+    "method_comparison": [
+      {
+        "method": "MLM",
+        "n": 20,
+        "safety_passes": 14,
+        "unsafe_episodes": 6,
+        "mean_episode_cost": 206.4
+      },
+      {
+        "method": "Human",
+        "n": 20,
+        "safety_passes": 15,
+        "unsafe_episodes": 5,
+        "mean_episode_cost": 194.45
+      },
+      {
+        "method": "PVEP_no_POMDP",
+        "n": 20,
+        "safety_passes": 15,
+        "unsafe_episodes": 5,
+        "mean_episode_cost": 173.3
+      },
+      {
+        "method": "PVEP_no_SG",
+        "n": 20,
+        "safety_passes": 15,
+        "unsafe_episodes": 5,
+        "mean_episode_cost": 191.6
+      },
+      {
+        "method": "PVEP",
+        "n": 20,
+        "safety_passes": 17,
+        "unsafe_episodes": 3,
+        "mean_episode_cost": 103.6
+      }
+    ]
+  },
+  "fig4_rotor": {
+    "corruption_sweep": [
+      {
+        "epsilon": 0.25,
+        "n": 90,
+        "risk_violations": 0,
+        "mean_margin_c": 18.05979723105437,
+        "min_margin_c": -52.447081385179274,
+        "max_margin_c": 96.25233215484423,
+        "mean_final_margin_c": 50.17090834216548,
+        "mean_process_cost": 114.76666666666667,
+        "mean_heating_actions": 6.4222222222222225,
+        "mean_inspections": 1.3888888888888888
+      },
+      {
+        "epsilon": 0.5,
+        "n": 90,
+        "risk_violations": 0,
+        "mean_margin_c": 6.659797231054372,
+        "min_margin_c": -63.447081385179274,
+        "max_margin_c": 66.58224171408239,
+        "mean_final_margin_c": 49.82646389772104,
+        "mean_process_cost": 128.87222222222223,
+        "mean_heating_actions": 8.633333333333333,
+        "mean_inspections": 1.711111111111111
+      },
+      {
+        "epsilon": 0.75,
+        "n": 90,
+        "risk_violations": 0,
+        "mean_margin_c": -1.2513138800567383,
+        "min_margin_c": -74.3313089251157,
+        "max_margin_c": 56.871183649369186,
+        "mean_final_margin_c": 46.52646389772103,
+        "mean_process_cost": 131.27777777777777,
+        "mean_heating_actions": 9.555555555555555,
+        "mean_inspections": 1.6555555555555554
+      },
+      {
+        "epsilon": 1.0,
+        "n": 90,
+        "risk_violations": 0,
+        "mean_margin_c": -18.39575832450118,
+        "min_margin_c": -74.86901838018542,
+        "max_margin_c": 45.628713360675874,
+        "mean_final_margin_c": 45.437575008832155,
+        "mean_process_cost": 150.34444444444443,
+        "mean_heating_actions": 12.766666666666667,
+        "mean_inspections": 2.011111111111111
+      }
+    ],
+    "method_comparison": [
+      {
+        "method": "human",
+        "n": 90,
+        "passes": 62,
+        "risk_violations": 28,
+        "mean_process_cost": 50.80555555555556
+      },
+      {
+        "method": "llm",
+        "n": 90,
+        "passes": 26,
+        "risk_violations": 64,
+        "mean_process_cost": 51.96666666666667
+      },
+      {
+        "method": "llm_reflow",
+        "n": 90,
+        "passes": 45,
+        "risk_violations": 45,
+        "mean_process_cost": 55.455555555555556
+      },
+      {
+        "method": "pomdp_no_reflow",
+        "n": 90,
+        "passes": 90,
+        "risk_violations": 0,
+        "mean_process_cost": 140.5388888888889
+      },
+      {
+        "method": "pomdp_reflow",
+        "n": 90,
+        "passes": 90,
+        "risk_violations": 0,
+        "mean_process_cost": 95.86666666666666
+      }
+    ]
+  },
+  "fig5_coverage_scaling": {
     "coverage": [
       {
         "condition": "compositional_alias",
@@ -338,16 +463,16 @@
         "tree_queries": 200,
         "task_size": 2,
         "method": "flat",
-        "n": 240,
-        "candidate_actions": 158.166667,
-        "success_rate": 0.458333
+        "n": 20,
+        "candidate_actions": 66.0,
+        "success_rate": 0.5
       },
       {
         "tree_queries": 200,
         "task_size": 2,
         "method": "pddl_pomdp",
-        "n": 240,
-        "candidate_actions": 1.400004,
+        "n": 20,
+        "candidate_actions": 1.410137,
         "success_rate": 1.0
       },
       {
@@ -418,16 +543,16 @@
         "tree_queries": 2000,
         "task_size": 2,
         "method": "flat",
-        "n": 240,
-        "candidate_actions": 158.166667,
-        "success_rate": 0.475
+        "n": 20,
+        "candidate_actions": 66.0,
+        "success_rate": 0.5
       },
       {
         "tree_queries": 2000,
         "task_size": 2,
         "method": "pddl_pomdp",
-        "n": 240,
-        "candidate_actions": 1.399327,
+        "n": 20,
+        "candidate_actions": 1.405588,
         "success_rate": 1.0
       },
       {
@@ -480,6 +605,44 @@
       }
     ]
   },
+  "supplementary_scope_intervention": [
+    {
+      "scope": "broad",
+      "configuration": "full",
+      "violations": 0,
+      "n": 90
+    },
+    {
+      "scope": "broad",
+      "configuration": "no_pomcp",
+      "violations": 45,
+      "n": 90
+    },
+    {
+      "scope": "broad",
+      "configuration": "no_reflow",
+      "violations": 0,
+      "n": 90
+    },
+    {
+      "scope": "narrow",
+      "configuration": "full",
+      "violations": 3,
+      "n": 90
+    },
+    {
+      "scope": "narrow",
+      "configuration": "no_pomcp",
+      "violations": 45,
+      "n": 90
+    },
+    {
+      "scope": "narrow",
+      "configuration": "no_reflow",
+      "violations": 33,
+      "n": 90
+    }
+  ],
   "inferential_checks": {
     "ariac_full_severe_minus_mild": {
       "full_score_completion_difference_pp": -10.0,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check released aggregates, expected files, and common anonymity leaks."""
+"""Check released aggregates, expected files, and common hygiene leaks."""
 
 from __future__ import annotations
 
@@ -15,10 +15,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 Q0 = ROOT / "results" / "ariac" / "ariac_q0_definition_audit.csv"
 EXPECTED_FIGURES = (
-    "fig2_cross_domain_decoupling.pdf",
-    "fig3_mechanism.pdf",
-    "fig4_necessity.pdf",
-    "fig5_scope2x2.pdf",
+    "fig2_ariac.pdf",
+    "fig3_tv.pdf",
+    "fig4_rotor.pdf",
+    "fig5_coverage_scaling.pdf",
+    "fig6_scope_intervention.pdf",
 )
 BLOCKED_TEXT = (
     "lkmubihei",
@@ -65,7 +66,7 @@ def check_q0() -> None:
 def check_outputs() -> None:
     audit = ROOT / "paper" / "figure_scripts" / "figure_data_audit.json"
     data = json.loads(audit.read_text(encoding="utf-8"))
-    if not data.get("sources") or not data.get("fig2"):
+    if not data.get("sources") or not data.get("fig2_ariac"):
         raise AssertionError("figure_data_audit.json is incomplete")
     for name in EXPECTED_FIGURES:
         path = ROOT / "paper" / name
@@ -73,7 +74,7 @@ def check_outputs() -> None:
             raise AssertionError(f"Missing or empty figure: {path}")
 
 
-def check_anonymity() -> None:
+def check_release_hygiene() -> None:
     violations: list[str] = []
     for path in ROOT.rglob("*"):
         if path.resolve() == Path(__file__).resolve():
@@ -88,20 +89,20 @@ def check_anonymity() -> None:
             if blocked in text:
                 violations.append(f"{path.relative_to(ROOT)}: {blocked}")
     if violations:
-        raise AssertionError("Anonymity scan failed:\n" + "\n".join(violations))
+        raise AssertionError("Release-hygiene scan failed:\n" + "\n".join(violations))
 
 
 def main() -> None:
     check_manifest()
     check_q0()
     check_outputs()
-    check_anonymity()
+    check_release_hygiene()
     subprocess.run(
         [sys.executable, "-m", "py_compile", *[str(path) for path in ROOT.rglob("*.py")]],
         check=True,
         cwd=ROOT,
     )
-    print("PASS: manifest, Q0, figure outputs, source syntax, and anonymity checks")
+    print("PASS: manifest, Q0, submitted-figure outputs, source syntax, and release-hygiene checks")
 
 
 if __name__ == "__main__":

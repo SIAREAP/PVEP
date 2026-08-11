@@ -7,6 +7,14 @@ import numpy as np
 import pandas as pd
 
 
+def first_existing_path(*paths: Path) -> Path:
+    """Return the first available release/local filename variant."""
+    for path in paths:
+        if path.exists():
+            return path
+    raise FileNotFoundError("None of the candidate paths exists: " + ", ".join(map(str, paths)))
+
+
 def read_csv(path: Path) -> pd.DataFrame:
     if not path.exists():
         raise FileNotFoundError(path)

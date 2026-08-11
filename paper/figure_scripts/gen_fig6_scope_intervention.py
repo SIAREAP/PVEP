@@ -7,24 +7,23 @@ import matplotlib.pyplot as plt
 from data_utils import binomial_error_percent
 from paper_plot_style import (
     COLORS,
-    PROJECT_ROOT,
+    RESULTS_DIR,
     light_y_grid,
-    safe_band,
     save_figure,
     set_publication_style,
 )
 
 
-DATA_PATH = PROJECT_ROOT / "results" / "rotor" / "rotor_scope2x2.csv"
+DATA_PATH = RESULTS_DIR / "rotor" / "rotor_scope2x2.csv"
 SCOPES = ("broad", "narrow")
 CONFIGS = (
     ("full", "Full", COLORS["blue"], "o", "-"),
-    ("no_reflow", "Without witness", COLORS["red"], "s", "--"),
-    ("no_pomcp", "Without belief", COLORS["gray"], "D", ":"),
+    ("no_reflow", "Without witness", COLORS["orange"], "s", "--"),
+    ("no_pomcp", "Without belief", COLORS["sage"], "D", ":"),
 )
 
 
-def load_counts() -> dict[tuple[str, str], tuple[int, int]]:
+def load_outcomes() -> dict[tuple[str, str], np.ndarray]:
     frame = pd.read_csv(DATA_PATH, header=[0, 1, 2])
     if len(frame) != 90:
         raise ValueError(f"{DATA_PATH} must contain 90 matched tasks")
@@ -45,7 +44,7 @@ def load_counts() -> dict[tuple[str, str], tuple[int, int]]:
         if metric == "RVR" and group_name is not None and scope_name is not None:
             rvr_columns[(scope_name, group_name)] = column
 
-    counts: dict[tuple[str, str], tuple[int, int]] = {}
+    outcomes: dict[tuple[str, str], np.ndarray] = {}
     for scope in SCOPES:
         for config, _label, _color, _marker, _linestyle in CONFIGS:
             column = rvr_columns.get((scope, config))
@@ -54,17 +53,25 @@ def load_counts() -> dict[tuple[str, str], tuple[int, int]]:
             values = pd.to_numeric(frame[column], errors="raise")
             if not set(values.dropna().unique()).issubset({0, 1}):
                 raise ValueError(f"{DATA_PATH} contains a non-binary RVR value")
-            counts[(scope, config)] = (int(values.sum()), len(values))
-    return counts
+            outcomes[(scope, config)] = values.to_numpy(int)
+    return outcomes
+
+
+def load_counts() -> dict[tuple[str, str], tuple[int, int]]:
+    """Compatibility wrapper used by the figure-data audit."""
+    return {
+        key: (int(values.sum()), len(values))
+        for key, values in load_outcomes().items()
+    }
 
 
 def main() -> None:
     set_publication_style()
-    counts = load_counts()
+    outcomes = load_outcomes()
+    counts = {key: (int(values.sum()), len(values)) for key, values in outcomes.items()}
     fig, ax = plt.subplots(figsize=(5.15, 2.80))
     x = np.asarray([0.0, 1.0])
 
-    safe_band(ax, 0.0, 5.0)
     for config, label, color, marker, linestyle in CONFIGS:
         cell_counts = [counts[(scope, config)] for scope in SCOPES]
         rates_and_errors = [binomial_error_percent(k, n) for k, n in cell_counts]
@@ -104,43 +111,13 @@ def main() -> None:
                 color=color,
             )
 
-    ax.text(
-        0.50,
-        39.0,
-        r"scope$\times$witness removal: +33.3 pp",
-        ha="center",
-        va="bottom",
-        fontsize=7.0,
-        color=COLORS["red"],
-        fontweight="medium",
-    )
-    ax.text(
-        0.50,
-        51.5,
-        "identical trial-for-trial",
-        ha="center",
-        va="bottom",
-        fontsize=6.7,
-        color=COLORS["gray"],
-    )
-    ax.text(
-        0.02,
-        0.035,
-        "safe ≤5%",
-        transform=ax.transAxes,
-        ha="left",
-        va="bottom",
-        fontsize=6.5,
-        color=COLORS["sage"],
-        fontweight="medium",
-    )
-
     ax.set_xticks(
         x,
         ["Broad scope\nuniform 250–440 °C", "Narrow scope\nproposal ±15 °C"],
     )
     ax.set_xlim(-0.13, 1.13)
-    ax.set_ylim(-2.0, 63.0)
+    ax.set_ylim(-7.0, 112.0)
+    ax.set_yticks([0, 25, 50, 75, 100])
     ax.set_ylabel("Risk violations (%)")
     light_y_grid(ax)
     ax.legend(
@@ -152,7 +129,7 @@ def main() -> None:
         bbox_to_anchor=(0.0, 1.02),
     )
     fig.subplots_adjust(left=0.12, right=0.985, top=0.89, bottom=0.24)
-    outputs = save_figure(fig, "fig5_scope2x2")
+    outputs = save_figure(fig, "fig6_scope_intervention")
     print("Saved:", *(str(path) for path in outputs), sep="\n  ")
 
 

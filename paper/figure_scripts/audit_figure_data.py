@@ -7,20 +7,28 @@ import numpy as np
 import pandas as pd
 from scipy.stats import binomtest
 
-from data_utils import bootstrap_mean_interval, file_sha256, read_csv, wilson_interval
+from data_utils import bootstrap_mean_interval, file_sha256, first_existing_path, read_csv, wilson_interval
+from gen_fig6_scope_intervention import load_counts as load_scope_counts
 from paper_plot_style import RESULTS_DIR, SCRIPT_DIR
 
 
 SOURCES = {
     "ariac_sweep": RESULTS_DIR / "ariac" / "Vbinary_sweep_per_order.csv",
     "ariac_admissibility": RESULTS_DIR / "ariac" / "ariac_pertrial_admissibility.csv",
-    "ariac_mechanism": RESULTS_DIR / "ariac" / "nominal_ablation_per_scenario.csv",
-    "ariac_vocabulary": RESULTS_DIR / "ariac" / "vocabulary_coverage_variants.csv",
+    "ariac_mechanism": first_existing_path(
+        RESULTS_DIR / "ariac" / "实验整理_更新版_mix更正.csv",
+        RESULTS_DIR / "ariac" / "nominal_ablation_per_scenario.csv",
+    ),
+    "ariac_vocabulary": first_existing_path(
+        RESULTS_DIR / "ariac" / "欠定任务40_variants结果.csv",
+        RESULTS_DIR / "ariac" / "vocabulary_coverage_variants.csv",
+    ),
     "ariac_scaling": RESULTS_DIR / "ariac" / "flat_scaling_q200_q2000_raw.csv",
     "tv_results": RESULTS_DIR / "tv" / "final10.csv",
     "tv_summary": RESULTS_DIR / "tv" / "final10_summary.csv",
     "rotor_methods": RESULTS_DIR / "rotor" / "table1_main_5_methods.csv",
     "rotor_corruption": RESULTS_DIR / "rotor" / "table2_perturbation_sweep.csv",
+    "rotor_scope": RESULTS_DIR / "rotor" / "rotor_scope2x2.csv",
 }
 
 
@@ -84,11 +92,14 @@ def build_report() -> dict[str, object]:
     }
     for eps, method in tv_methods.items():
         cell = tv[tv["method"] == method]
+        unsafe_episode_count = int((1 - cell["task_pass"].astype(int)).sum())
         tv_rows.append(
             {
                 "epsilon": eps,
                 "n": len(cell),
                 "pass_rate": float(cell["task_pass"].mean()),
+                "unsafe_episode_count": unsafe_episode_count,
+                "unsafe_episode_rate": float(unsafe_episode_count / len(cell)),
                 "mean_total_cost": float(cell["total_cost"].mean()),
                 "total_cost_population_std": float(cell["total_cost"].std(ddof=0)),
                 "fasten_violations": int(cell["fasten_violation_count"].sum()),
@@ -108,6 +119,7 @@ def build_report() -> dict[str, object]:
     for eps, tag in zip((0.25, 0.50, 0.75, 1.00), ("0p25", "0p50", "0p75", "1p00")):
         prefix = f"eps_{tag}_"
         margin = rotor[prefix + "proposal_temp_c"] - rotor["t_needed_c"]
+        final_margin = rotor[prefix + "final_temp_c"] - rotor["t_needed_c"]
         rotor_rows.append(
             {
                 "epsilon": eps,
@@ -116,12 +128,15 @@ def build_report() -> dict[str, object]:
                 "mean_margin_c": float(margin.mean()),
                 "min_margin_c": float(margin.min()),
                 "max_margin_c": float(margin.max()),
+                "mean_final_margin_c": float(final_margin.mean()),
+                "mean_process_cost": float(rotor[prefix + "total_cost"].mean()),
                 "mean_heating_actions": float(rotor[prefix + "n_heat"].mean()),
                 "mean_inspections": float(rotor[prefix + "n_inspect"].mean()),
             }
         )
 
-    mechanism = read_csv(SOURCES["ariac_mechanism"])
+    mechanism_all = read_csv(SOURCES["ariac_mechanism"])
+    mechanism = mechanism_all.copy()
     mechanism["scope"] = mechanism["regime"].map(
         {
             "normal": "routine",
@@ -147,26 +162,94 @@ def build_report() -> dict[str, object]:
     )
 
     scaling = read_csv(SOURCES["ariac_scaling"])
+    scaling = scaling[
+        (scaling["horizon"] == 8 * scaling["task_size"] + 4)
+        & (scaling["latent_variables"] == scaling["task_size"])
+    ].drop_duplicates(
+        ["tree_queries", "task_size", "horizon", "latent_variables", "method", "seed"]
+    )
+    scaling_counts = scaling.groupby(["tree_queries", "task_size", "method"]).size()
+    if not (scaling_counts == 20).all():
+        raise ValueError(f"Canonical scaling slice must contain 20 unique seeds per cell:\n{scaling_counts}")
     scaling_summary = (
         scaling.groupby(["tree_queries", "task_size", "method"])
         .agg(n=("seed", "size"), candidate_actions=("candidate_actions_mean", "mean"), success_rate=("success", "mean"))
         .reset_index()
     )
 
+    ariac_primary_columns = {
+        "VLM+NL": "open_loop_vlm_nl_completion",
+        "VLM+NL+repair": "vlm_nl_re_completion",
+        "VLM+PDDL": "vlm_pddl_completion",
+        "VLM+PDDL+repair": "vlm_pddl_re_completion",
+        "PVEP": "pomdp_our_completion",
+    }
+    ariac_primary = [
+        {
+            "method": method,
+            "n": len(mechanism_all),
+            "strict_completions": int(np.isclose(mechanism_all[column], 1.0).sum()),
+        }
+        for method, column in ariac_primary_columns.items()
+    ]
+
+    tv_primary = []
+    for method in ("MLM", "Human", "PVEP_no_POMDP", "PVEP_no_SG", "PVEP"):
+        cell = tv[tv["method"] == method]
+        tv_primary.append(
+            {
+                "method": method,
+                "n": len(cell),
+                "safety_passes": int(cell["task_pass"].sum()),
+                "unsafe_episodes": int((1 - cell["task_pass"].astype(int)).sum()),
+                "mean_episode_cost": float(cell["total_cost"].mean()),
+            }
+        )
+
+    rotor_methods = read_csv(SOURCES["rotor_methods"])
+    rotor_primary = []
+    for prefix in ("human", "llm", "llm_reflow", "pomdp_no_reflow", "pomdp_reflow"):
+        rotor_primary.append(
+            {
+                "method": prefix,
+                "n": len(rotor_methods),
+                "passes": int(rotor_methods[prefix + "_pass"].sum()),
+                "risk_violations": int(rotor_methods[prefix + "_rvr"].sum()),
+                "mean_process_cost": float(rotor_methods[prefix + "_total_cost"].mean()),
+            }
+        )
+
+    scope_counts = load_scope_counts()
+    scope_rows = [
+        {"scope": scope, "configuration": config, "violations": count, "n": trials}
+        for (scope, config), (count, trials) in sorted(scope_counts.items())
+    ]
+
     return {
-        "policy": "All plotted values are derived from the released trial-level tables under results/.",
+        "policy": "All plotted values are derived from the curated results directory; publication assets supply panel-a imagery only.",
         "sources": {
             name: {"path": str(path.relative_to(RESULTS_DIR.parent)), "sha256": file_sha256(path)}
             for name, path in SOURCES.items()
         },
-        "fig2": {
-            "ariac": _records(ariac_summary),
+        "fig2_ariac": {
+            "nominal_ablation": ariac_primary,
+            "corruption_sweep": _records(ariac_summary),
             "ariac_admissibility": _records(quality_summary),
-            "tv": tv_rows,
-            "rotor": rotor_rows,
+            "mechanism": mechanism_rows,
         },
-        "fig3": {"ariac_mechanism": mechanism_rows},
-        "fig4": {"coverage": _records(coverage_summary), "scaling": _records(scaling_summary)},
+        "fig3_tv": {
+            "corruption_sweep": tv_rows,
+            "method_comparison": tv_primary,
+        },
+        "fig4_rotor": {
+            "corruption_sweep": rotor_rows,
+            "method_comparison": rotor_primary,
+        },
+        "fig5_coverage_scaling": {
+            "coverage": _records(coverage_summary),
+            "scaling": _records(scaling_summary),
+        },
+        "supplementary_scope_intervention": scope_rows,
         "inferential_checks": {
             "ariac_full_severe_minus_mild": {
                 "full_score_completion_difference_pp": float(100.0 * completion_difference.mean()),
