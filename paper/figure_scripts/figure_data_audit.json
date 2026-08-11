@@ -673,9 +673,12 @@
         "p_value": 1.0
       }
     },
-    "rotor_zero_event_wilson_upper_percent": {
-      "per_level_n90": 4.093562556432678,
-      "pooled_n360": 1.0558056888693508
+    "rotor_zero_event_summary": {
+      "per_condition_n": 90,
+      "per_condition_wilson_upper_percent": 4.093562556432678,
+      "descriptive_pooled_events": 0,
+      "descriptive_pooled_trials": 360,
+      "note": "The same 90 trial identities repeat across four conditions; no pooled Bernoulli interval is computed."
     }
   }
 }

@@ -265,9 +265,12 @@ def build_report() -> dict[str, object]:
                 "bootstrap_ci90_pp": [float(100.0 * x) for x in tv_ci90],
                 "mcnemar": _mcnemar_exact(tv_mild, tv_severe),
             },
-            "rotor_zero_event_wilson_upper_percent": {
-                "per_level_n90": float(100.0 * wilson_interval(0, 90)[1]),
-                "pooled_n360": float(100.0 * wilson_interval(0, 360)[1]),
+            "rotor_zero_event_summary": {
+                "per_condition_n": 90,
+                "per_condition_wilson_upper_percent": float(100.0 * wilson_interval(0, 90)[1]),
+                "descriptive_pooled_events": 0,
+                "descriptive_pooled_trials": 360,
+                "note": "The same 90 trial identities repeat across four conditions; no pooled Bernoulli interval is computed.",
             },
         },
     }

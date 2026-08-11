@@ -8,8 +8,11 @@ from typing import Dict, List, Optional, Tuple
 
 import openai
 
-BASE_URL = os.environ.get("PVEP_OPENAI_BASE_URL", "https://api.bianxie.ai/v1")
-MODEL_NAME = os.environ.get("PVEP_OPENAI_MODEL", "gpt-5.2-2025-12-11")
+# Runtime configuration is intentionally provider-neutral.  The historical
+# result tables do not establish which gateway endpoint was used for every
+# archived run, so the reproduction code must not imply one through a default.
+BASE_URL = os.environ.get("PVEP_OPENAI_BASE_URL", "").strip()
+MODEL_NAME = os.environ.get("PVEP_OPENAI_MODEL", "").strip()
 
 ROOT = Path(__file__).resolve().parent
 PROMPT_EXAMPLE_DIR = ROOT / "prompt_example"
@@ -51,6 +54,10 @@ def load_api_key() -> str:
     key = key.strip()
     if not key:
         raise RuntimeError("Set PVEP_OPENAI_API_KEY or OPENAI_API_KEY before calling the VLM helpers.")
+    if not BASE_URL:
+        raise RuntimeError("Set PVEP_OPENAI_BASE_URL to the provider or proxy endpoint used for the run.")
+    if not MODEL_NAME:
+        raise RuntimeError("Set PVEP_OPENAI_MODEL to the exact provider model identifier used for the run.")
     return key
 
 

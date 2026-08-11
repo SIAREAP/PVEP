@@ -6,6 +6,8 @@ trial-level result tables, deterministic analysis and figure-regeneration
 scripts, and reference implementations of the planners, verifiers, and domain
 models used in the released analyses.
 
+The repository is synchronized with the author-identified manuscript.
+
 ## Reproduce the reported aggregates and figures
 
 Python 3.10 or newer is recommended.
@@ -46,6 +48,8 @@ released tables.
 - `pvep/kinova/`: fastening-domain model and controller code.
 - `pvep/sleeve/`: thermal interference-fitting model and controller code.
 - `docs/DATA_AND_CODE.md`: claim-to-file, configuration, and figure mapping.
+- `docs/PROTOCOL_AND_MODEL_PROVENANCE.md`: ARIAC protocol and model-provenance
+  ledger, including fields that were not retained in legacy aggregates.
 - `scripts/verify_release.py`: aggregate, file-integrity, and release-hygiene checks.
 - `MANIFEST.sha256`: cryptographic hashes of released non-generated files.
 
@@ -68,3 +72,8 @@ for every request.
 
 The ARIAC runtime requires an external ROS 2/ARIAC installation. Trial-level
 analyses and submitted-figure regeneration require only `requirements.txt`.
+Foundation-model calls additionally require explicit provider endpoint and
+model values; copy `.env.example` and set `PVEP_OPENAI_BASE_URL`,
+`PVEP_OPENAI_MODEL`, and the API key for each new run. The thermal LLM
+proposal runner accepts the analogous `SLEEVE_LLM_*` variables. No
+third-party endpoint or model alias is selected by default.

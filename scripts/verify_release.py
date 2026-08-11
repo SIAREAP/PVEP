@@ -27,6 +27,10 @@ BLOCKED_TEXT = (
     "/home/pc",
     "sia_interface_zjy",
     "lk@todo.todo",
+    "api.bianxie.ai",
+    "open.bigmodel.cn",
+    "anonymous reproduction repository",
+    "double-blind manuscript",
 )
 
 

@@ -65,7 +65,7 @@ def plot_coverage(ax: plt.Axes, frame: pd.DataFrame) -> None:
         "compositional_alias",
         "visual_deictic",
     ]
-    labels = ["Exact\ncanonical", "Exact\nparaphrase", "Semantic\nalias",
+    labels = ["Exact\ncanonical", "Canonical-vocab.\nparaphrase", "Semantic\nalias",
               "Compositional\nalias", "Visual\ndeictic"]
     methods = [
         ("strict_symbolic_applicable", "Strict symbolic", COLORS["gray"], "s", -0.13),
@@ -171,12 +171,12 @@ def plot_width(ax: plt.Axes, frame: pd.DataFrame) -> None:
     ax.set_yscale("log")
     ax.set_ylim(0.8, 700)
     ax.set_xticks(TASK_SIZES)
-    ax.set_xlabel("Task size $N$")
-    ax.set_ylabel("Candidate actions")
+    ax.set_xlabel("Task size $N$ (subgoals)")
+    ax.set_ylabel("Root candidate actions")
     ax.grid(axis="y", which="major", color=COLORS["grid"], linewidth=0.45,
             linestyle=(0, (2.2, 2.2)))
     ax.grid(axis="y", which="minor", color=COLORS["grid"], linewidth=0.28, alpha=0.38)
-    add_panel_label(ax, "b", "Search width")
+    add_panel_label(ax, "b", r"Root search width ($Q=200$)")
 
 
 def plot_success(ax: plt.Axes, frame: pd.DataFrame) -> None:
@@ -236,7 +236,7 @@ def plot_success(ax: plt.Axes, frame: pd.DataFrame) -> None:
         fontsize=5.3,
     )
     ax.set_xticks(TASK_SIZES)
-    ax.set_xlabel("Task size $N$")
+    ax.set_xlabel("Task size $N$ (subgoals)")
     ax.set_ylabel("Planner success (%)")
     ax.set_ylim(-10, 113)
     ax.set_yticks([0, 25, 50, 75, 100])

@@ -31,7 +31,6 @@ from paper_plot_style import (
     SCRIPT_DIR,
     SUBMISSION_DIR,
     add_case_panel_labels,
-    add_figure_legends,
     add_full_width_image_axis,
     light_y_grid,
     ours_effects,
@@ -49,15 +48,6 @@ ABLATIONS = [
     ("PVEP_no_SG", "PVEP w/o SG", *METHOD_STYLES["no_sg"][:2]),
     ("PVEP", "PVEP", *METHOD_STYLES["pvep"][:2]),
 ]
-FIG3_METHOD_LEGEND = [
-    ("Heuristic", *METHOD_STYLES["heuristic"]),
-    ("FM", *METHOD_STYLES["fm"]),
-    ("PVEP w/o POMDP", *METHOD_STYLES["no_pomdp"]),
-    ("PVEP w/o SG", *METHOD_STYLES["no_sg"]),
-    ("PVEP", *METHOD_STYLES["pvep"]),
-]
-
-
 path = RESULTS_DIR / "tv" / "final10.csv"
 tv = read_csv(path)
 require_columns(
@@ -75,8 +65,8 @@ for method in ROBUST_METHODS + [item[0] for item in ABLATIONS]:
 
 fig = plt.figure(figsize=(7.2, 6.72))
 lower = GridSpec(
-    2, 2, figure=fig, left=0.100, right=0.985, bottom=0.060, top=0.425,
-    hspace=1.10, wspace=0.34,
+    2, 2, figure=fig, left=0.100, right=0.985, bottom=0.055, top=0.455,
+    hspace=0.82, wspace=0.32,
 )
 
 # a: representative inspection/recovery sequence.
@@ -102,8 +92,8 @@ for index, method in enumerate(ROBUST_METHODS):
     ax_b.text(index, min(110, rate + high + 3), f"{events}/20", ha="center",
               va="bottom", fontsize=6.2, color=COLORS["ours"], fontweight="bold")
 ax_b.set_xticks(x, ["0", "0.25", "0.50", "0.75", "1.00"])
-ax_b.set_xlabel(r"Initial-label corruption $\epsilon$")
-set_directional_ylabel(ax_b, "Unsafe episodes (%)", lower_is_better=True)
+ax_b.set_xlabel(r"Low-confidence wrong-label probability $\epsilon$")
+set_directional_ylabel(ax_b, "Unsafe direct-FASTEN\nepisodes (%)", lower_is_better=True)
 ax_b.set_ylim(-8, 116)
 ax_b.set_yticks([0, 25, 50, 75, 100])
 light_y_grid(ax_b)
@@ -129,7 +119,7 @@ for index, method in enumerate(ROBUST_METHODS):
                   markeredgecolor="white", markeredgewidth=0.5, capsize=2.2,
                   elinewidth=0.8, zorder=4, path_effects=ours_effects())
 ax_c.set_xticks(x, ["0", "0.25", "0.50", "0.75", "1.00"])
-ax_c.set_xlabel(r"Initial-label corruption $\epsilon$")
+ax_c.set_xlabel(r"Low-confidence wrong-label probability $\epsilon$")
 set_directional_ylabel(ax_c, "Episode cost (a.u.)", lower_is_better=True)
 ax_c.set_ylim(bottom=40)
 light_y_grid(ax_c)
@@ -149,14 +139,11 @@ for index, (method, label, color, marker) in enumerate(ABLATIONS):
                   markeredgewidth=1.1 if marker == "x" else 0.5, capsize=2.2,
                   elinewidth=0.8, zorder=4,
                   path_effects=ours_effects() if label == "PVEP" else None)
-    label_text = f"{events}/20"
-    if method == "PVEP":
-        label_text += f"\n{int(cell['fasten_violation_count'].sum())}/120 decisions"
-    ax_d.text(index, min(110, rate + high + 3), label_text, ha="center",
-              va="bottom", fontsize=5.8 if method == "PVEP" else 6.2,
+    ax_d.text(index, min(110, rate + high + 3), f"{events}/20", ha="center",
+              va="bottom", fontsize=6.2,
               color=color, fontweight="bold")
 ax_d.set_xticks(x_d, [item[1].replace(" ", "\n", 1) for item in ABLATIONS])
-set_directional_ylabel(ax_d, "Unsafe episodes (%)", lower_is_better=True)
+set_directional_ylabel(ax_d, "Unsafe direct-FASTEN\nepisodes (%)", lower_is_better=True)
 ax_d.set_ylim(-8, 116)
 ax_d.set_yticks([0, 25, 50, 75, 100])
 light_y_grid(ax_d)
@@ -191,10 +178,9 @@ ax_e.set_xticks(x_d, [item[1].replace(" ", "\n", 1) for item in ABLATIONS])
 set_directional_ylabel(ax_e, "Episode cost (a.u.)", lower_is_better=True)
 ax_e.set_ylim(bottom=30)
 light_y_grid(ax_e)
-ax_e.set_title("Decision cost across methods", pad=5)
+ax_e.set_title("Episode cost across methods", pad=5)
 
 add_case_panel_labels(fig, ax_a, ax_b, ax_c, ax_d, ax_e)
-add_figure_legends(fig, ax_b, FIG3_METHOD_LEGEND, case_label="episode")
 
 out = SCRIPT_DIR / "fig3_tv.pdf"
 fig.savefig(out)

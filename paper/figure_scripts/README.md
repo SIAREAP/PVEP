@@ -34,6 +34,9 @@ curated trial-level files under `results/`.
   - panels b/c: `results/rotor/table2_perturbation_sweep.csv`
   - panels d/e: `results/rotor/table1_main_5_methods.csv`
   - the displayed **Heuristic** row retains raw prefix `human`
+  - the same 90 trial identities repeat across the four corruption levels;
+    `0/360` is descriptive, while the zero-event Wilson upper endpoint is
+    computed separately at `n=90`
 - **Fig. 5 — interface coverage and bounded scaling
   (`fig5_coverage_scaling.pdf`)**
   - panel a: `results/ariac/vocabulary_coverage_variants.csv`

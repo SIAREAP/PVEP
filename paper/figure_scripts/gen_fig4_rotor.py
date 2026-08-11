@@ -32,7 +32,6 @@ from paper_plot_style import (
     SCRIPT_DIR,
     SUBMISSION_DIR,
     add_case_panel_labels,
-    add_figure_legends,
     add_full_width_image_axis,
     light_y_grid,
     ours_effects,
@@ -52,15 +51,6 @@ ABLATIONS = [
     ("pomdp_no_reflow", "PVEP w/o SG", *METHOD_STYLES["no_sg"][:2]),
     ("pomdp_reflow", "PVEP", *METHOD_STYLES["pvep"][:2]),
 ]
-FIG4_METHOD_LEGEND = [
-    ("Heuristic", *METHOD_STYLES["heuristic"]),
-    ("FM", *METHOD_STYLES["fm"]),
-    ("PVEP w/o POMDP", *METHOD_STYLES["no_pomdp"]),
-    ("PVEP w/o SG", *METHOD_STYLES["no_sg"]),
-    ("PVEP", *METHOD_STYLES["pvep"]),
-]
-
-
 sweep_path = RESULTS_DIR / "rotor" / "table2_perturbation_sweep.csv"
 sweep = read_csv(sweep_path)
 required = {"task_id", "t_needed_c"}
@@ -105,8 +95,8 @@ if len(methods) != 90:
 
 fig = plt.figure(figsize=(7.2, 6.72))
 lower = GridSpec(
-    2, 2, figure=fig, left=0.100, right=0.985, bottom=0.060, top=0.425,
-    hspace=1.10, wspace=0.34,
+    2, 2, figure=fig, left=0.100, right=0.985, bottom=0.055, top=0.455,
+    hspace=0.82, wspace=0.32,
 )
 
 # a: representative insufficient-heating failure sequence.
@@ -131,12 +121,14 @@ ax_b.errorbar(
     path_effects=ours_effects(),
 )
 ax_b.axhline(0, color=COLORS["red"], linewidth=0.9, linestyle="--", zorder=2)
+ax_b.text(103, 2.2, "risk limit: margin < 0", ha="right", va="bottom",
+          fontsize=6.0, color=COLORS["red"])
 ax_b.text(0.03, 0.95, "0 / 360 risk violations", transform=ax_b.transAxes,
           ha="left", va="top", fontsize=6.6, color=COLORS["ours"],
           bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=COLORS["light_gray"],
                     lw=0.45, alpha=0.92))
-ax_b.set_xlabel("Initial temperature margin (°C)")
-ax_b.set_ylabel("Final temperature margin (°C)")
+ax_b.set_xlabel(r"Initial margin, $T_{proposal}-T_{required}$ (°C)")
+ax_b.set_ylabel(r"Final margin, $T_{final}-T_{required}$ (°C)")
 ax_b.set_xlim(-76, 106)
 ax_b.set_xticks(ROTOR_CENTERS, ["−60", "−30", "0", "+30", "+60", "+90"])
 light_y_grid(ax_b)
@@ -159,7 +151,7 @@ for index, epsilon in enumerate(EPS):
                   linestyle=METHOD_STYLES["pvep"][2], markersize=8.0,
                   markeredgecolor="white", markeredgewidth=0.5, capsize=2.2,
                   elinewidth=0.8, zorder=4, path_effects=ours_effects())
-ax_c.set_xlabel(r"Setpoint perturbation $\epsilon$")
+ax_c.set_xlabel(r"Setpoint perturbation level $\epsilon$")
 set_directional_ylabel(ax_c, "Process cost (a.u.)", lower_is_better=True)
 ax_c.set_xticks(EPS, ["0.25", "0.50", "0.75", "1.00"])
 ax_c.set_ylim(bottom=35)
@@ -188,17 +180,16 @@ ax_d.set_yticks([0, 25, 50, 75, 100])
 light_y_grid(ax_d)
 ax_d.set_title("Violation-free trials across methods", pad=5)
 
-# e: process cost across the same ablations, with paired trial trajectories.
+# e: process cost across the same ablations. Jittered trial points avoid a
+# dense line web while preserving the observed per-method distributions.
 ax_e = fig.add_subplot(lower[1, 1])
-cost_columns = [prefix + "_total_cost" for prefix, _, _, _ in ABLATIONS]
-cost_matrix = methods[cost_columns].to_numpy(float)
-for row in cost_matrix:
-    ax_e.plot(x_d, row, color=COLORS["light_gray"], linewidth=0.38, alpha=0.30, zorder=1)
+rng_e = np.random.default_rng(20261139)
 for index, (prefix, label, color, marker) in enumerate(ABLATIONS):
     values = methods[prefix + "_total_cost"].to_numpy(float)
     low, high = bootstrap_mean_interval(values, seed=20261140 + index)
     mean = float(values.mean())
-    ax_e.scatter(np.full(len(values), index), values, s=7.5, color=color, alpha=0.18,
+    jitter = rng_e.uniform(-0.065, 0.065, size=len(values))
+    ax_e.scatter(np.full(len(values), index) + jitter, values, s=7.5, color=color, alpha=0.18,
                  edgecolors="none", zorder=2)
     ax_e.errorbar(index, mean, yerr=np.asarray([[mean - low], [high - mean]]),
                   color=color, marker=marker, markersize=9 if label == "PVEP" else 5.8,
@@ -216,9 +207,6 @@ light_y_grid(ax_e)
 ax_e.set_title("Process cost across methods", pad=5)
 
 add_case_panel_labels(fig, ax_a, ax_b, ax_c, ax_d, ax_e)
-add_figure_legends(
-    fig, ax_b, FIG4_METHOD_LEGEND, case_label="trial", include_risk_limit=True
-)
 
 out = SCRIPT_DIR / "fig4_rotor.pdf"
 fig.savefig(out)

@@ -743,25 +743,31 @@ def main() -> None:
         "--llm-provider",
         type=str,
         choices=["openai", "anthropic", "anthropic_compatible", "bigmodel_anthropic"],
-        default=os.environ.get("SLEEVE_LLM_PROVIDER", "anthropic"),
+        default=os.environ.get("SLEEVE_LLM_PROVIDER", os.environ.get("PVEP_LLM_PROVIDER", "openai")),
     )
     parser.add_argument(
         "--llm-base-url",
         type=str,
         default=os.environ.get(
             "SLEEVE_LLM_BASE_URL",
-            os.environ.get("OPENAI_BASE_URL", "https://open.bigmodel.cn/api/anthropic"),
+            os.environ.get("PVEP_OPENAI_BASE_URL", os.environ.get("OPENAI_BASE_URL", "")),
         ),
     )
     parser.add_argument(
         "--llm-api-key",
         type=str,
-        default=os.environ.get("SLEEVE_LLM_API_KEY", os.environ.get("OPENAI_API_KEY", os.environ.get("BIGMODEL_API_KEY", ""))),
+        default=os.environ.get(
+            "SLEEVE_LLM_API_KEY",
+            os.environ.get("PVEP_OPENAI_API_KEY", os.environ.get("OPENAI_API_KEY", "")),
+        ),
     )
     parser.add_argument(
         "--openai-model",
         type=str,
-        default=os.environ.get("SLEEVE_LLM_MODEL", os.environ.get("OPENAI_MODEL", "glm-4.7")),
+        default=os.environ.get(
+            "SLEEVE_LLM_MODEL",
+            os.environ.get("PVEP_OPENAI_MODEL", os.environ.get("OPENAI_MODEL", "")),
+        ),
     )
     parser.add_argument(
         "--llm-cache-path",
@@ -853,6 +859,18 @@ def main() -> None:
     online_reflow_proposals: tuple[OnlineReflowProposal, ...] = ()
     rows = None
     if str(args.proposal_source) == "openai":
+        missing_llm_fields = []
+        if not str(args.llm_base_url).strip():
+            missing_llm_fields.append("SLEEVE_LLM_BASE_URL or PVEP_OPENAI_BASE_URL")
+        if not str(args.llm_api_key).strip():
+            missing_llm_fields.append("SLEEVE_LLM_API_KEY, PVEP_OPENAI_API_KEY or OPENAI_API_KEY")
+        if not str(args.openai_model).strip():
+            missing_llm_fields.append("SLEEVE_LLM_MODEL or PVEP_OPENAI_MODEL")
+        if missing_llm_fields:
+            raise RuntimeError(
+                "Explicit LLM runtime provenance is required for --proposal-source openai; "
+                "set " + ", ".join(missing_llm_fields) + "."
+            )
         _configure_llm_cache(str(args.llm_cache_path))
         if bool(needs_reflow_proposals):
             rows, online_reflow_proposals = _run_openai_reflow_comparison_branches(

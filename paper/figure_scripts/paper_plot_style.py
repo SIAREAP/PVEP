@@ -46,6 +46,7 @@ COLORS = {
     "teal": "#009E73",
     "amber": "#E69F00",
     "rose": "#CC79A7",
+    "purple": "#7E57C2",
     "sky": "#56B4E9",
     "red": "#D14040",
     "brick": "#C62828",
@@ -72,7 +73,7 @@ METHOD_STYLES = {
     "fm_repair": (COLORS["rose"], "^", "None"),
     "no_pomdp": (COLORS["orange"], "s", "None"),
     "no_sg": (COLORS["green"], "D", "--"),
-    "binary": (COLORS["green"], "D", "--"),
+    "binary": (COLORS["purple"], "o", "--"),
     "pvep": (COLORS["ours"], "*", "-"),
 }
 

@@ -32,7 +32,6 @@ from paper_plot_style import (
     SCRIPT_DIR,
     SUBMISSION_DIR,
     add_case_panel_labels,
-    add_figure_legends,
     add_full_width_image_axis,
     light_y_grid,
     ours_effects,
@@ -91,19 +90,10 @@ method_configs = [
     ("vlm_pddl_completion", "PVEP w/o\nSG", *METHOD_STYLES["no_sg"][:2]),
     ("pomdp_our_completion", "PVEP", *METHOD_STYLES["pvep"][:2]),
 ]
-FIG2_METHOD_LEGEND = [
-    ("FM", *METHOD_STYLES["fm"]),
-    ("FM + Repair", *METHOD_STYLES["fm_repair"]),
-    ("PVEP w/o POMDP", *METHOD_STYLES["no_pomdp"]),
-    ("PVEP w/o SG / PVEP–Binary", *METHOD_STYLES["binary"]),
-    ("PVEP", *METHOD_STYLES["pvep"]),
-]
-
-
 fig = plt.figure(figsize=(7.2, 6.72))
 lower = GridSpec(
-    2, 2, figure=fig, left=0.100, right=0.985, bottom=0.060, top=0.425,
-    hspace=1.10, wspace=0.34,
+    2, 2, figure=fig, left=0.100, right=0.985, bottom=0.055, top=0.455,
+    hspace=0.82, wspace=0.32,
 )
 
 # a: representative task sequence.
@@ -131,16 +121,23 @@ for config, label, color, marker, linestyle, offset in score_entries:
         yerr=asymmetric_yerr(means, summary["low"].to_numpy(), summary["high"].to_numpy()),
         color=color, marker=marker, linestyle=linestyle, capsize=2.0, elinewidth=0.75,
         markersize=8.0 if marker == "*" else 5.2,
-        markeredgecolor=color if marker == "x" else "white",
-        markeredgewidth=1.1 if marker == "x" else 0.5,
+        markerfacecolor="white" if config == "V_binary" else color,
+        markeredgecolor=color if config == "V_binary" or marker == "x" else "white",
+        markeredgewidth=0.9 if config == "V_binary" else 1.1 if marker == "x" else 0.5,
         path_effects=ours_effects() if config == "V_full" else None,
     )
+    ax_b.annotate(
+        "PVEP" if config == "V_full" else "Binary feedback",
+        (EPS[-1] + offset, means[-1]), xytext=(5, 0), textcoords="offset points",
+        ha="left", va="center", fontsize=6.2, color=color, clip_on=False,
+    )
 ax_b.set_xlabel(r"Proposal corruption $\epsilon$")
-ax_b.set_ylabel("Task score (%)")
+ax_b.set_ylabel("Scenario-normalized score (%) ↑")
 ax_b.set_xticks(EPS, ["0.25", "0.50", "0.75", "1.00"])
+ax_b.set_xlim(0.21, 1.18)
 ax_b.set_ylim(38, 104)
 light_y_grid(ax_b)
-ax_b.set_title("Proposal robustness", pad=5)
+ax_b.set_title("Task score vs. proposal corruption", pad=5)
 
 # c: information-acquisition burden under the same corruption sweep.
 ax_c = fig.add_subplot(lower[0, 1])
@@ -163,18 +160,25 @@ for config, label, color, marker, linestyle, offset in burden_entries:
         yerr=asymmetric_yerr(means, summary["low"].to_numpy(), summary["high"].to_numpy()),
         color=color, marker=marker, linestyle=linestyle, capsize=2.0, elinewidth=0.75,
         markersize=8.0 if marker == "*" else 5.2,
-        markeredgecolor=color if marker == "x" else "white",
-        markeredgewidth=1.1 if marker == "x" else 0.5,
+        markerfacecolor="white" if config == "binary" else color,
+        markeredgecolor=color if config == "binary" or marker == "x" else "white",
+        markeredgewidth=0.9 if config == "binary" else 1.1 if marker == "x" else 0.5,
         path_effects=ours_effects() if config == "full" else None,
     )
+    ax_c.annotate(
+        "PVEP" if config == "full" else "Binary feedback",
+        (EPS[-1] + offset, means[-1]), xytext=(5, 0), textcoords="offset points",
+        ha="left", va="center", fontsize=6.2, color=color, clip_on=False,
+    )
 ax_c.set_xlabel(r"Proposal corruption $\epsilon$")
-ax_c.set_ylabel("Inspection actions\nper scenario")
+ax_c.set_ylabel("Inspections per scenario (symlog; ↓)")
 ax_c.set_xticks(EPS, ["0.25", "0.50", "0.75", "1.00"])
+ax_c.set_xlim(0.21, 1.18)
 ax_c.set_yscale("symlog", linthresh=1.0)
 ax_c.set_yticks([0, 1, 3, 10, 30, 100], ["0", "1", "3", "10", "30", "100"])
 ax_c.set_ylim(0, 115)
 light_y_grid(ax_c)
-ax_c.set_title("Inspection burden", pad=5)
+ax_c.set_title("Inspection burden vs. proposal corruption", pad=5)
 
 # d: reliability across the five primary methods on all 50 scenarios.
 ax_d = fig.add_subplot(lower[1, 0])
@@ -191,11 +195,11 @@ for index, (column, label, color, marker) in enumerate(method_configs):
     ax_d.text(index, min(110, rate + high + 3), f"{successes}/50", ha="center",
               va="bottom", fontsize=6.4, color=color, fontweight="bold")
 ax_d.set_xticks(x_d, [item[1] for item in method_configs])
-ax_d.set_ylabel("Strict completion (%)")
+ax_d.set_ylabel("Strict full-score\ncompletion (%) ↑")
 ax_d.set_ylim(-8, 116)
 ax_d.set_yticks([0, 25, 50, 75, 100])
 light_y_grid(ax_d)
-ax_d.set_title("Five-method comparison", pad=5)
+ax_d.set_title(r"Nominal strict completion ($\epsilon=0$)", pad=5)
 
 # e: recovery on matched skeleton-breaking scenarios.
 ax_e = fig.add_subplot(lower[1, 1])
@@ -215,14 +219,13 @@ for index, ((_, label, color, marker), outcomes) in enumerate(zip(method_configs
     ax_e.text(index, min(110, rate + high + 3), f"{successes}/20", ha="center",
               va="bottom", fontsize=6.4, color=color, fontweight="bold")
 ax_e.set_xticks(x_e, [item[1] for item in method_configs])
-ax_e.set_ylabel("Challenge completion (%)")
+ax_e.set_ylabel("Strict full-score\ncompletion (%) ↑")
 ax_e.set_ylim(-8, 116)
 ax_e.set_yticks([0, 25, 50, 75, 100])
 light_y_grid(ax_e)
-ax_e.set_title("Structural recovery", pad=5)
+ax_e.set_title("Skeleton-breaking completion", pad=5)
 
 add_case_panel_labels(fig, ax_a, ax_b, ax_c, ax_d, ax_e)
-add_figure_legends(fig, ax_b, FIG2_METHOD_LEGEND, case_label="scenario")
 
 out = SCRIPT_DIR / "fig2_ariac.pdf"
 fig.savefig(out)

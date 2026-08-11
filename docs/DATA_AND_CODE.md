@@ -23,15 +23,23 @@ For Fig. 3b/d, the plotted unsafe-episode rate is computed as
 `1 - task_pass`, preserving the six-hole episode as the statistical unit.
 Panels 3c/e use `total_cost`, the engineered decision cost summed over one
 six-hole episode and displayed in arbitrary units.
+The `112/120` state-decision result is a descriptive hole-level diagnostic;
+no Wilson interval assuming independent holes is attached. In the rotor
+corruption sweep, the same 90 trial identities repeat across four conditions.
+The release therefore reports a per-condition `0/90` Wilson upper endpoint
+(about 4.1%) and treats `0/360` only as a descriptive pooled event count.
 
-Figs. 2--4 share a fixed method encoding: Heuristic/grey circle, FM/red cross,
-FM + Repair/magenta triangle (Fig. 2 only), PVEP w/o POMDP/orange square,
-PVEP w/o SG or PVEP--Binary/green diamond with a dashed trend, and PVEP/blue
-star with a solid trend. In continuous panels, small translucent points are
-individual scenarios (Fig. 2), episodes (Fig. 3), or trials (Fig. 4), and
-light-grey lines follow the same case across settings. Binary panels omit
-redundant 0/100 sample bands and show only the aggregate rate, 95% confidence
-interval, and exact count. The red dashed line in Fig. 4 denotes the risk limit.
+Figs. 2--4 use consistent method encodings without redundant global legends:
+Heuristic/grey circle, FM/red cross, FM + Repair/magenta triangle (Fig. 2
+only), PVEP w/o POMDP/orange square, PVEP w/o SG/green diamond, and PVEP/blue
+star. PVEP--Binary is visually distinct from PVEP w/o SG: it uses a purple
+open circle and dashed trend and is directly labelled in Fig. 2b/c. Method
+names in comparison panels are carried by the horizontal axes. Small
+translucent points show individual cases; light-grey lines follow matched
+cases where retained. Fig. 4e uses jittered trial points without pairing lines
+to avoid a dense line web. Binary panels show aggregate rates, 95% Wilson
+intervals, and exact counts. Continuous-panel error bars are 95% bootstrap
+intervals. The red dashed risk limit in Fig. 4b is labelled directly.
 
 ## ARIAC Fig. 2 configuration mapping
 
@@ -47,6 +55,14 @@ Every row retains the common structured executor-state/PDDL applicability
 gate. The separate `V_greedy` information-policy ablation retains the full
 repair package and is not the displayed `PVEP w/o POMDP` row.
 
+The Fig. 2d/e component-role ablation and the natural-proposal audit reuse the
+same scenario identities but come from distinct archived run series and report
+different endpoints. They are not repeated estimates of one protocol. The
+proposal-source, cache/regeneration, in-loop-backend, time-budget,
+crash-adjudication, and metric fields—and explicit `NR` entries where legacy
+records are incomplete—are listed in
+`docs/PROTOCOL_AND_MODEL_PROVENANCE.md`.
+
 The displayed `Heuristic` baselines retain legacy raw names `Human` (TV) and
 `human` (rotor) so that released tables remain byte-stable. They are
 engineering rules, not human-participant experiments.
@@ -57,6 +73,19 @@ Other files under `results/ariac/` provide trial-level baseline, challenge,
 positive-control, and unified 900-second timeout-status records. Lineage-only
 workstation paths are de-identified; trial identifiers, model snapshots,
 scores, budgets, and failure/status fields are retained.
+
+## Model API configuration and provenance
+
+`ariac/competition_tutorials/eval.py` and the optional thermal LLM proposal
+runner are provider-neutral. New foundation-model calls require the provider
+endpoint and exact model identifier to be set explicitly through
+`PVEP_OPENAI_*` or `SLEEVE_LLM_*` variables; no third-party endpoint or model
+alias is selected by default. The exact model identifiers and available
+archived run dates are recorded in `docs/PROTOCOL_AND_MODEL_PROVENANCE.md`.
+Provider, endpoint, and proxy fields that were not stored with legacy
+aggregates are marked `NR`; the release does not infer them from an old code
+default. Temperature-zero decoding settings are reported as such, rather than
+described as deterministic.
 
 ## Implementation map
 
