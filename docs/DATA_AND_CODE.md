@@ -6,7 +6,7 @@
 |---|---|---|
 | Fig. 2b, ARIAC corruption score | `results/ariac/Vbinary_sweep_per_order.csv` | `gen_fig2_ariac.py` |
 | Fig. 2c, ARIAC inspection burden | `results/ariac/ariac_pertrial_admissibility.csv` | `gen_fig2_ariac.py` |
-| Fig. 2d/e, nominal ablation and challenge recovery | `results/ariac/nominal_ablation_per_scenario.csv` | `gen_fig2_ariac.py` |
+| Fig. 2d/e, method scores and task-condition matrix | `results/ariac/nominal_ablation_per_scenario.csv` | `gen_fig2_ariac.py` |
 | Fig. 3b--e, fastening corruption and ablations | `results/tv/final10.csv` | `gen_fig3_tv.py` |
 | Fig. 4b/c, rotor setpoint corruption | `results/rotor/table2_perturbation_sweep.csv` | `gen_fig4_rotor.py` |
 | Fig. 4d/e, rotor method comparison | `results/rotor/table1_main_5_methods.csv` | `gen_fig4_rotor.py` |
@@ -43,19 +43,23 @@ intervals. The red dashed risk limit in Fig. 4b is labelled directly.
 
 ## ARIAC Fig. 2 configuration mapping
 
-| Display label | Released raw configuration/column | Information planning | Replanning | Complete repair package | Nominal strict completion |
-|---|---|---:|---|---:|---:|
-| FM | `open_loop_vlm_nl` / `open_loop_vlm_nl_completion` | no | no | no | 11/50 |
-| FM + Repair | `vlm_nl_re` / `vlm_nl_re_completion` | no | generic | no | 32/50 |
-| PVEP w/o POMDP | `vlm_pddl_re` / `vlm_pddl_re_completion` | no | generic | no | 32/50 |
-| PVEP w/o SG | `vlm_pddl` / `vlm_pddl_completion` | no | no | no | 11/50 |
-| PVEP | `pomdp_our` / `pomdp_our_completion` | POMCP | yes | yes | 50/50 |
+| Display label | Released score column | Information planning | Feedback to re-proposal | Mean scenario-normalized score |
+|---|---|---:|---|---:|
+| FM | `open_loop_vlm_nl_score` | no | none | 51.8% |
+| FM + Repair | `vlm_nl_re_score` | no | generic | 77.1% |
+| PVEP w/o POMDP | `vlm_pddl_re_score` | no | generic | 69.8% |
+| PVEP w/o SG | `our_error_score` (`V_error`) | POMCP | error message, no structured semantic gradient | 68.0% |
+| PVEP | `pomdp_our_score` | POMCP | structured semantic-gradient package | 100.0% |
 
 Every row retains the common structured executor-state/PDDL applicability
-gate. The separate `V_greedy` information-policy ablation retains the full
-repair package and is not the displayed `PVEP w/o POMDP` row.
+gate. `PVEP w/o SG` is the released `V_error` condition: it retains POMCP and
+verifier error feedback but omits the structured semantic-gradient message.
+The released `our_raw_score` field is `V_binary`, shown as PVEP--Binary in
+Fig. 2b/c; it is not the w/o-SG row. The separate `V_greedy`
+information-policy ablation retains the full repair package and is not the
+displayed `PVEP w/o POMDP` row.
 
-The Fig. 2d/e component-role ablation and the natural-proposal audit reuse the
+The Fig. 2d/e five-method score comparison and the natural-proposal audit reuse the
 same scenario identities but come from distinct archived run series and report
 different endpoints. They are not repeated estimates of one protocol. The
 proposal-source, cache/regeneration, in-loop-backend, time-budget,

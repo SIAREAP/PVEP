@@ -43,31 +43,208 @@
     }
   },
   "fig2_ariac": {
-    "nominal_ablation": [
+    "method_score_comparison": [
       {
-        "method": "VLM+NL",
+        "method": "FM",
+        "released_score_column": "open_loop_vlm_nl_score",
         "n": 50,
-        "strict_completions": 11
+        "mean_score_percent": 51.822971799442385,
+        "bootstrap_ci95_percent": [
+          42.903620888915015,
+          60.84136252636254
+        ]
       },
       {
-        "method": "VLM+NL+repair",
+        "method": "FM + Repair",
+        "released_score_column": "vlm_nl_re_score",
         "n": 50,
-        "strict_completions": 32
+        "mean_score_percent": 77.0940262352027,
+        "bootstrap_ci95_percent": [
+          67.20421904892493,
+          86.14529166911518
+        ]
       },
       {
-        "method": "VLM+PDDL",
+        "method": "PVEP w/o POMDP",
+        "released_score_column": "vlm_pddl_re_score",
         "n": 50,
-        "strict_completions": 11
+        "mean_score_percent": 69.76534576534577,
+        "bootstrap_ci95_percent": [
+          57.682187257187266,
+          81.3559385059385
+        ]
       },
       {
-        "method": "VLM+PDDL+repair",
+        "method": "PVEP w/o SG",
+        "released_score_column": "our_error_score",
         "n": 50,
-        "strict_completions": 32
+        "mean_score_percent": 67.99068643774527,
+        "bootstrap_ci95_percent": [
+          56.70334378040261,
+          78.72376378523435
+        ]
       },
       {
         "method": "PVEP",
+        "released_score_column": "pomdp_our_score",
         "n": 50,
-        "strict_completions": 50
+        "mean_score_percent": 100.0,
+        "bootstrap_ci95_percent": [
+          100.0,
+          100.0
+        ]
+      }
+    ],
+    "task_condition_scores": [
+      {
+        "condition": "Normal",
+        "method": "FM",
+        "n": 10,
+        "mean_score_percent": 70.32679738562092
+      },
+      {
+        "condition": "Normal",
+        "method": "FM + Repair",
+        "n": 10,
+        "mean_score_percent": 85.88235294117646
+      },
+      {
+        "condition": "Normal",
+        "method": "PVEP w/o POMDP",
+        "n": 10,
+        "mean_score_percent": 52.777777777777786
+      },
+      {
+        "condition": "Normal",
+        "method": "PVEP w/o SG",
+        "n": 10,
+        "mean_score_percent": 100.0
+      },
+      {
+        "condition": "Normal",
+        "method": "PVEP",
+        "n": 10,
+        "mean_score_percent": 100.0
+      },
+      {
+        "condition": "Priority",
+        "method": "FM",
+        "n": 10,
+        "mean_score_percent": 59.75113122171946
+      },
+      {
+        "condition": "Priority",
+        "method": "FM + Repair",
+        "n": 10,
+        "mean_score_percent": 64.74934869052517
+      },
+      {
+        "condition": "Priority",
+        "method": "PVEP w/o POMDP",
+        "n": 10,
+        "mean_score_percent": 60.0
+      },
+      {
+        "condition": "Priority",
+        "method": "PVEP w/o SG",
+        "n": 10,
+        "mean_score_percent": 100.0
+      },
+      {
+        "condition": "Priority",
+        "method": "PVEP",
+        "n": 10,
+        "mean_score_percent": 100.0
+      },
+      {
+        "condition": "Dropped part",
+        "method": "FM",
+        "n": 10,
+        "mean_score_percent": 44.96252113899173
+      },
+      {
+        "condition": "Dropped part",
+        "method": "FM + Repair",
+        "n": 10,
+        "mean_score_percent": 90.0
+      },
+      {
+        "condition": "Dropped part",
+        "method": "PVEP w/o POMDP",
+        "n": 10,
+        "mean_score_percent": 96.81818181818183
+      },
+      {
+        "condition": "Dropped part",
+        "method": "PVEP w/o SG",
+        "n": 10,
+        "mean_score_percent": 83.66515837104072
+      },
+      {
+        "condition": "Dropped part",
+        "method": "PVEP",
+        "n": 10,
+        "mean_score_percent": 100.0
+      },
+      {
+        "condition": "Faulty part",
+        "method": "FM",
+        "n": 10,
+        "mean_score_percent": 47.20017237664297
+      },
+      {
+        "condition": "Faulty part",
+        "method": "FM + Repair",
+        "n": 10,
+        "mean_score_percent": 75.58823529411765
+      },
+      {
+        "condition": "Faulty part",
+        "method": "PVEP w/o POMDP",
+        "n": 10,
+        "mean_score_percent": 80.0
+      },
+      {
+        "condition": "Faulty part",
+        "method": "PVEP w/o SG",
+        "n": 10,
+        "mean_score_percent": 33.519931049342816
+      },
+      {
+        "condition": "Faulty part",
+        "method": "PVEP",
+        "n": 10,
+        "mean_score_percent": 100.0
+      },
+      {
+        "condition": "Mixed",
+        "method": "FM",
+        "n": 10,
+        "mean_score_percent": 36.87423687423687
+      },
+      {
+        "condition": "Mixed",
+        "method": "FM + Repair",
+        "n": 10,
+        "mean_score_percent": 69.25019425019424
+      },
+      {
+        "condition": "Mixed",
+        "method": "PVEP w/o POMDP",
+        "n": 10,
+        "mean_score_percent": 59.23076923076924
+      },
+      {
+        "condition": "Mixed",
+        "method": "PVEP w/o SG",
+        "n": 10,
+        "mean_score_percent": 22.768342768342762
+      },
+      {
+        "condition": "Mixed",
+        "method": "PVEP",
+        "n": 10,
+        "mean_score_percent": 100.0
       }
     ],
     "corruption_sweep": [

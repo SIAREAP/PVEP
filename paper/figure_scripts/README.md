@@ -20,9 +20,11 @@ curated trial-level files under `results/`.
   - panel b: `results/ariac/Vbinary_sweep_per_order.csv`
   - panel c: `results/ariac/ariac_pertrial_admissibility.csv`
   - panels d/e: `results/ariac/nominal_ablation_per_scenario.csv`
-  - displayed/raw nominal mapping: FM/`open_loop_vlm_nl`, FM +
-    Repair/`vlm_nl_re`, PVEP w/o POMDP/`vlm_pddl_re`, PVEP w/o
-    SG/`vlm_pddl`, PVEP/`pomdp_our`
+  - panel d shows all scenario scores; panel e shows mean score by task
+    condition (10 scenarios per cell)
+  - displayed/raw score mapping: FM/`open_loop_vlm_nl_score`, FM +
+    Repair/`vlm_nl_re_score`, PVEP w/o POMDP/`vlm_pddl_re_score`, PVEP w/o
+    SG/`our_error_score` (`V_error`), PVEP/`pomdp_our_score`
 - **Fig. 3 — television fastening (`fig3_tv.pdf`)**
   - panel a: `paper/tv_overview.png`
   - panels b--e: `results/tv/final10.csv`
@@ -49,11 +51,12 @@ curated trial-level files under `results/`.
 ## Shared visual encoding in Figs. 2--4
 
 - Heuristic: grey circle; FM: red cross; FM + Repair (Fig. 2 only): magenta
-  triangle; PVEP w/o POMDP: orange square; PVEP w/o SG and PVEP--Binary:
-  green diamond with a dashed trend; PVEP: blue star with a solid trend.
+  triangle; PVEP w/o POMDP: orange square; PVEP w/o SG: green diamond;
+  PVEP--Binary: purple open circle with a dashed trend; PVEP: blue star with a
+  solid trend.
 - In continuous panels, a small translucent point is one scenario (Fig. 2),
   episode (Fig. 3), or trial (Fig. 4); a light-grey line follows that same case
-  across settings. Binary panels omit redundant 0/100 sample bands and show
+  across settings. Rate panels omit redundant 0/100 sample bands and show
   only the aggregate rate, 95% confidence interval, and exact count. The red
   dashed line in Fig. 4 is the risk limit.
 

@@ -36,6 +36,15 @@ def _records(frame: pd.DataFrame) -> list[dict[str, object]]:
     return json.loads(frame.to_json(orient="records", double_precision=6))
 
 
+def _parse_ariac_score(value: object) -> float:
+    if pd.isna(value):
+        return 0.0
+    text = str(value).strip()
+    if not text or text == "-":
+        return 0.0
+    return float(sum(float(term.strip()) for term in text.split("+")))
+
+
 def _mcnemar_exact(mild: np.ndarray, severe: np.ndarray) -> dict[str, float | int]:
     mild_only = int(np.sum((mild == 1) & (severe == 0)))
     severe_only = int(np.sum((mild == 0) & (severe == 1)))
@@ -45,8 +54,13 @@ def _mcnemar_exact(mild: np.ndarray, severe: np.ndarray) -> dict[str, float | in
 
 
 def build_report() -> dict[str, object]:
-    sweep = read_csv(SOURCES["ariac_sweep"])
-    sweep = sweep[sweep["epsilon"].isin([0.25, 0.50, 0.75, 1.00])].copy()
+    sweep_all = read_csv(SOURCES["ariac_sweep"])
+    nominal_max = sweep_all[
+        (sweep_all["config"] == "V_full") & np.isclose(sweep_all["epsilon"], 0.0)
+    ][["order_id", "max_score"]].rename(columns={"order_id": "trial_name"})
+    if len(nominal_max) != 50 or nominal_max["trial_name"].nunique() != 50:
+        raise ValueError("Expected one nominal maximum score for each of 50 ARIAC scenarios")
+    sweep = sweep_all[sweep_all["epsilon"].isin([0.25, 0.50, 0.75, 1.00])].copy()
     sweep["score_percent"] = 100.0 * sweep["score"] / sweep["max_score"]
     sweep["full_score"] = np.isclose(sweep["score"], sweep["max_score"]).astype(int)
     sweep["any_score"] = (sweep["score"] > 0).astype(int)
@@ -135,7 +149,11 @@ def build_report() -> dict[str, object]:
             }
         )
 
-    mechanism_all = read_csv(SOURCES["ariac_mechanism"])
+    mechanism_all = read_csv(SOURCES["ariac_mechanism"]).merge(
+        nominal_max, on="trial_name", how="left", validate="one_to_one"
+    )
+    if mechanism_all["max_score"].isna().any():
+        raise ValueError("Missing a maximum score in the ARIAC method comparison")
     mechanism = mechanism_all.copy()
     mechanism["scope"] = mechanism["regime"].map(
         {
@@ -178,20 +196,48 @@ def build_report() -> dict[str, object]:
     )
 
     ariac_primary_columns = {
-        "VLM+NL": "open_loop_vlm_nl_completion",
-        "VLM+NL+repair": "vlm_nl_re_completion",
-        "VLM+PDDL": "vlm_pddl_completion",
-        "VLM+PDDL+repair": "vlm_pddl_re_completion",
-        "PVEP": "pomdp_our_completion",
+        "FM": "open_loop_vlm_nl_score",
+        "FM + Repair": "vlm_nl_re_score",
+        "PVEP w/o POMDP": "vlm_pddl_re_score",
+        "PVEP w/o SG": "our_error_score",
+        "PVEP": "pomdp_our_score",
     }
-    ariac_primary = [
-        {
-            "method": method,
-            "n": len(mechanism_all),
-            "strict_completions": int(np.isclose(mechanism_all[column], 1.0).sum()),
-        }
-        for method, column in ariac_primary_columns.items()
-    ]
+    ariac_primary = []
+    for index, (method, column) in enumerate(ariac_primary_columns.items()):
+        values = 100.0 * mechanism_all[column].map(_parse_ariac_score) / mechanism_all["max_score"]
+        low, high = bootstrap_mean_interval(values.to_numpy(float), seed=20260840 + index)
+        ariac_primary.append(
+            {
+                "method": method,
+                "released_score_column": column,
+                "n": len(values),
+                "mean_score_percent": float(values.mean()),
+                "bootstrap_ci95_percent": [float(low), float(high)],
+            }
+        )
+
+    regime_names = {
+        "normal": "Normal",
+        "priority": "Priority",
+        "dropped_part": "Dropped part",
+        "faulty_part": "Faulty part",
+        "mix_challenges": "Mixed",
+    }
+    ariac_condition_scores: list[dict[str, object]] = []
+    for regime, display_name in regime_names.items():
+        cell = mechanism_all[mechanism_all["regime"] == regime]
+        if len(cell) != 10:
+            raise ValueError(f"ARIAC condition {regime} must contain 10 scenarios")
+        for method, column in ariac_primary_columns.items():
+            values = 100.0 * cell[column].map(_parse_ariac_score) / cell["max_score"]
+            ariac_condition_scores.append(
+                {
+                    "condition": display_name,
+                    "method": method,
+                    "n": len(values),
+                    "mean_score_percent": float(values.mean()),
+                }
+            )
 
     tv_primary = []
     for method in ("MLM", "Human", "PVEP_no_POMDP", "PVEP_no_SG", "PVEP"):
@@ -232,7 +278,8 @@ def build_report() -> dict[str, object]:
             for name, path in SOURCES.items()
         },
         "fig2_ariac": {
-            "nominal_ablation": ariac_primary,
+            "method_score_comparison": ariac_primary,
+            "task_condition_scores": ariac_condition_scores,
             "corruption_sweep": _records(ariac_summary),
             "ariac_admissibility": _records(quality_summary),
             "mechanism": mechanism_rows,
