@@ -207,24 +207,8 @@ def light_y_grid(ax: plt.Axes) -> None:
 
 
 def set_directional_ylabel(ax: plt.Axes, label: str, *, lower_is_better: bool) -> None:
-    """Set a rotated y label while keeping the direction arrow upright."""
+    """Set the y-axis label without a directional arrow."""
     ax.set_ylabel(label)
-    start_y, end_y = ((0.17, 0.015) if lower_is_better else (0.83, 0.985))
-    ax.annotate(
-        "",
-        xy=(-0.20, end_y),
-        xytext=(-0.20, start_y),
-        xycoords=ax.transAxes,
-        arrowprops={
-            "arrowstyle": "-|>",
-            "color": COLORS["ink"],
-            "lw": 0.75,
-            "mutation_scale": 7.0,
-            "shrinkA": 0,
-            "shrinkB": 0,
-        },
-        annotation_clip=False,
-    )
 
 
 def safe_band(ax: plt.Axes, low: float, high: float) -> None:

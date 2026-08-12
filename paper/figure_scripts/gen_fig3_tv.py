@@ -43,7 +43,7 @@ EPS = np.asarray([0.00, 0.25, 0.50, 0.75, 1.00])
 ROBUST_METHODS = ["PVEP", "PVEP_eps_0.25", "PVEP_eps_0.50", "PVEP_eps_0.75", "PVEP_eps_1.00"]
 ABLATIONS = [
     ("Human", "Heuristic", *METHOD_STYLES["heuristic"][:2]),
-    ("MLM", "FM", *METHOD_STYLES["fm"][:2]),
+    ("MLM", "MLM", *METHOD_STYLES["fm"][:2]),
     ("PVEP_no_POMDP", "PVEP w/o POMDP", *METHOD_STYLES["no_pomdp"][:2]),
     ("PVEP_no_SG", "PVEP w/o SG", *METHOD_STYLES["no_sg"][:2]),
     ("PVEP", "PVEP", *METHOD_STYLES["pvep"][:2]),

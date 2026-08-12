@@ -30,9 +30,11 @@ The release therefore reports a per-condition `0/90` Wilson upper endpoint
 (about 4.1%) and treats `0/360` only as a descriptive pooled event count.
 
 Figs. 2--4 use consistent method encodings without redundant global legends:
-Heuristic/grey circle, FM/red cross, FM + Repair/magenta triangle (Fig. 2
-only), PVEP w/o POMDP/orange square, PVEP w/o SG/green diamond, and PVEP/blue
-star. PVEP--Binary is visually distinct from PVEP w/o SG: it uses a purple
+Heuristic/grey circle, FM (Figs. 2 and 4) or MLM (Fig. 3)/red cross, FM +
+Repair/magenta triangle (Fig. 2 only), PVEP w/o POMDP/orange square, PVEP w/o
+SG/green diamond, and PVEP/blue star. In Fig. 3, MLM directly maps the current
+perception label to a terminal action and is not a foundation-model baseline.
+PVEP--Binary is visually distinct from PVEP w/o SG: it uses a purple
 open circle and dashed trend and is directly labelled in Fig. 2b/c. Method
 names in comparison panels are carried by the horizontal axes. Small
 translucent points show individual cases; light-grey lines follow matched
