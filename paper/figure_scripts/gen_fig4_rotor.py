@@ -124,7 +124,7 @@ ax_b.axhline(0, color=COLORS["red"], linewidth=0.9, linestyle="--", zorder=2)
 ax_b.text(103, 2.2, "risk limit: margin < 0", ha="right", va="bottom",
           fontsize=6.0, color=COLORS["red"])
 ax_b.text(0.03, 0.95,
-          "0 / 360 observed safety violations\n(descriptive pooled count)",
+          "0 / 360 observed safety violations",
           transform=ax_b.transAxes,
           ha="left", va="top", fontsize=6.6, color=COLORS["ours"],
           bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=COLORS["light_gray"],
