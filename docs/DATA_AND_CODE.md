@@ -19,6 +19,13 @@
 table, recomputes aggregates and inferential checks, checks the canonical
 20-seed scaling slice, and records SHA-256 hashes for every figure input.
 
+In Fig. 5a, the raw `exact_paraphrase` condition is displayed as **Canonical
+reordering**. The LLM-parser series is omitted because its five results exactly
+match the VLM series. In Fig. 5b/c, flat planning exposes all subgoals and
+actions to one belief tree, whereas bounded compilation solves one active
+subgoal at a time. Both formulations receive the same horizon
+`8 * task_size + 4` and the same per-decision query budgets.
+
 For Fig. 3b/d, the plotted unsafe-episode rate is computed as
 `1 - task_pass`, preserving the six-hole episode as the statistical unit.
 Panels 3c/e use `total_cost`, the engineered decision cost summed over one
@@ -30,10 +37,11 @@ The release therefore reports a per-condition `0/90` Wilson upper endpoint
 (about 4.1%) and treats `0/360` only as a descriptive pooled event count.
 
 Figs. 2--4 use consistent method encodings without redundant global legends:
-Heuristic/grey circle, FM (Figs. 2 and 4) or MLM (Fig. 3)/red cross, FM +
+Heuristic/grey circle, FM/red cross, FM +
 Repair/magenta triangle (Fig. 2 only), PVEP w/o POMDP/orange square, PVEP w/o
-SG/green diamond, and PVEP/blue star. In Fig. 3, MLM directly maps the current
-perception label to a terminal action and is not a foundation-model baseline.
+SG/green diamond, and PVEP/blue star. In Fig. 3, FM retains the raw
+configuration name `MLM` and maps its current perception label directly to a
+terminal action.
 PVEP--Binary is visually distinct from PVEP w/o SG: it uses a purple
 open circle and dashed trend and is directly labelled in Fig. 2b/c. Method
 names in comparison panels are carried by the horizontal axes. Small

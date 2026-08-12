@@ -28,8 +28,8 @@ curated trial-level files under `results/`.
 - **Fig. 3 — television fastening (`fig3_tv.pdf`)**
   - panel a: `paper/tv_overview.png`
   - panels b--e: `results/tv/final10.csv`
-  - the displayed **MLM** baseline directly maps the current perception label
-    to a terminal action; it is not a foundation-model baseline
+  - the displayed **FM** baseline retains raw configuration name `MLM` and
+    maps its current perception label directly to a terminal action
   - the displayed **Heuristic** row retains raw configuration name `Human`
   - panels b/d plot `1 - task_pass` as the episode-level unsafe rate
   - panels c/e plot the engineered cost summed over one six-hole episode
@@ -44,15 +44,20 @@ curated trial-level files under `results/`.
 - **Fig. 5 — interface coverage and bounded scaling
   (`fig5_coverage_scaling.pdf`)**
   - panel a: `results/ariac/vocabulary_coverage_variants.csv`
+  - the raw `exact_paraphrase` condition is displayed as **Canonical
+    reordering**; the omitted LLM-parser series exactly overlaps VLM grounding
+    in all five forms
   - panels b/c: canonical slice of
     `results/ariac/flat_scaling_q200_q2000_raw.csv`, defined by
     `horizon = 8 * task_size + 4` and `latent_variables = task_size`
+  - flat exposes every subgoal to one belief tree; bounded compiles one active
+    subgoal at a time. Both use the same horizon and query budgets
 - **Supplementary scope intervention (`fig6_scope_intervention.pdf`)**
   - `results/rotor/rotor_scope2x2.csv`
 
 ## Shared visual encoding in Figs. 2--4
 
-- Heuristic: grey circle; FM (Figs. 2 and 4) or MLM (Fig. 3): red cross;
+- Heuristic: grey circle; FM: red cross;
   FM + Repair (Fig. 2 only): magenta triangle; PVEP w/o POMDP: orange square;
   PVEP w/o SG: green diamond;
   PVEP--Binary: purple open circle with a dashed trend; PVEP: blue star with a
