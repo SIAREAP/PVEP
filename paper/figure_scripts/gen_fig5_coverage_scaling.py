@@ -65,7 +65,7 @@ def plot_coverage(ax: plt.Axes, frame: pd.DataFrame) -> None:
         "compositional_alias",
         "visual_deictic",
     ]
-    labels = ["Canonical\nwording", "Canonical\nreordering", "Semantic\nalias",
+    labels = ["Canonical\nwording", "Canonical-\nvocabulary\nparaphrase", "Semantic\nalias",
               "Compositional\nalias", "Visual\nreference"]
     methods = [
         ("strict_symbolic_applicable", "Strict symbolic", COLORS["gray"], "s", -0.13),

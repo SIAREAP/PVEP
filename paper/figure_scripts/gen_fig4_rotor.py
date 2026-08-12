@@ -1,7 +1,7 @@
 """Fig. 4 Rotor: overview plus four data panels with shared case-study roles.
 
-b: robustness to initializer error; c: process cost under perturbation;
-d: violation-free trials across five methods; e: process cost across five
+b: robustness to initial-candidate error; c: process cost under perturbation;
+d: safety-violation rate across five methods; e: process cost across five
 methods.
 """
 from __future__ import annotations
@@ -123,7 +123,9 @@ ax_b.errorbar(
 ax_b.axhline(0, color=COLORS["red"], linewidth=0.9, linestyle="--", zorder=2)
 ax_b.text(103, 2.2, "risk limit: margin < 0", ha="right", va="bottom",
           fontsize=6.0, color=COLORS["red"])
-ax_b.text(0.03, 0.95, "0 / 360 risk violations", transform=ax_b.transAxes,
+ax_b.text(0.03, 0.95,
+          "0 / 360 observed safety violations\n(descriptive pooled count)",
+          transform=ax_b.transAxes,
           ha="left", va="top", fontsize=6.6, color=COLORS["ours"],
           bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=COLORS["light_gray"],
                     lw=0.45, alpha=0.92))
@@ -158,27 +160,27 @@ ax_c.set_ylim(bottom=35)
 light_y_grid(ax_c)
 ax_c.set_title("Process cost under setpoint errors", pad=5)
 
-# d: violation-free reliability across component ablations.
+# d: safety-violation rate across component ablations.
 ax_d = fig.add_subplot(lower[1, 0])
 x_d = np.arange(len(ABLATIONS), dtype=float)
 for index, (prefix, label, color, marker) in enumerate(ABLATIONS):
-    safe = 1 - methods[prefix + "_rvr"].astype(int).to_numpy()
-    successes = int(safe.sum())
-    rate, low, high = binomial_error_percent(successes, len(safe))
+    violations = methods[prefix + "_rvr"].astype(int).to_numpy()
+    count = int(violations.sum())
+    rate, low, high = binomial_error_percent(count, len(violations))
     ax_d.errorbar(index, rate, yerr=np.asarray([[low], [high]]), color=color,
                   marker=marker, markersize=9 if label == "PVEP" else 5.8,
                   markeredgecolor=color if marker == "x" else "white",
                   markeredgewidth=1.1 if marker == "x" else 0.5, capsize=2.2,
                   elinewidth=0.8, zorder=4,
                   path_effects=ours_effects() if label == "PVEP" else None)
-    ax_d.text(index, min(110, rate + high + 3), f"{successes}/90", ha="center",
+    ax_d.text(index, min(110, rate + high + 3), f"{count}/90", ha="center",
               va="bottom", fontsize=6.2, color=color, fontweight="bold")
 ax_d.set_xticks(x_d, [item[1].replace(" ", "\n", 1) for item in ABLATIONS])
-set_directional_ylabel(ax_d, "Violation-free trials (%)", lower_is_better=False)
+set_directional_ylabel(ax_d, "Safety violations (%)", lower_is_better=True)
 ax_d.set_ylim(-8, 116)
 ax_d.set_yticks([0, 25, 50, 75, 100])
 light_y_grid(ax_d)
-ax_d.set_title("Violation-free trials across methods", pad=5)
+ax_d.set_title("Safety violations across methods", pad=5)
 
 # e: process cost across the same ablations. Jittered trial points avoid a
 # dense line web while preserving the observed per-method distributions.

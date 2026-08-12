@@ -1,6 +1,6 @@
 """Fig. 3 TV: overview plus four data panels with shared case-study roles.
 
-b: unsafe episodes under initializer corruption; c: episode cost under
+b: unsafe episodes under initial-candidate corruption; c: episode cost under
 corruption; d: unsafe episodes across five methods; e: episode cost across
 five methods.
 """
@@ -93,7 +93,7 @@ for index, method in enumerate(ROBUST_METHODS):
               va="bottom", fontsize=6.2, color=COLORS["ours"], fontweight="bold")
 ax_b.set_xticks(x, ["0", "0.25", "0.50", "0.75", "1.00"])
 ax_b.set_xlabel(r"Low-confidence wrong-label probability $\epsilon$")
-set_directional_ylabel(ax_b, "Unsafe direct-FASTEN\nepisodes (%)", lower_is_better=True)
+set_directional_ylabel(ax_b, "Episodes with at least one\nunsafe direct FASTEN (%)", lower_is_better=True)
 ax_b.set_ylim(-8, 116)
 ax_b.set_yticks([0, 25, 50, 75, 100])
 light_y_grid(ax_b)
@@ -143,7 +143,7 @@ for index, (method, label, color, marker) in enumerate(ABLATIONS):
               va="bottom", fontsize=6.2,
               color=color, fontweight="bold")
 ax_d.set_xticks(x_d, [item[1].replace(" ", "\n", 1) for item in ABLATIONS])
-set_directional_ylabel(ax_d, "Unsafe direct-FASTEN\nepisodes (%)", lower_is_better=True)
+set_directional_ylabel(ax_d, "Episodes with at least one\nunsafe direct FASTEN (%)", lower_is_better=True)
 ax_d.set_ylim(-8, 116)
 ax_d.set_yticks([0, 25, 50, 75, 100])
 light_y_grid(ax_d)

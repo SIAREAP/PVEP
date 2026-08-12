@@ -18,7 +18,7 @@ DATA_PATH = RESULTS_DIR / "rotor" / "rotor_scope2x2.csv"
 SCOPES = ("broad", "narrow")
 CONFIGS = (
     ("full", "Full", COLORS["blue"], "o", "-"),
-    ("no_reflow", "Without witness", COLORS["orange"], "s", "--"),
+    ("no_reflow", "Without setpoint repair", COLORS["orange"], "s", "--"),
     ("no_pomcp", "Without belief", COLORS["sage"], "D", ":"),
 )
 
@@ -113,12 +113,12 @@ def main() -> None:
 
     ax.set_xticks(
         x,
-        ["Broad scope\nuniform 250–440 °C", "Narrow scope\nproposal ±15 °C"],
+        ["Broad belief support\nuniform 250–440 °C", "Narrow belief support\nproposal ±15 °C"],
     )
     ax.set_xlim(-0.13, 1.13)
     ax.set_ylim(-7.0, 112.0)
     ax.set_yticks([0, 25, 50, 75, 100])
-    ax.set_ylabel("Risk violations (%)")
+    ax.set_ylabel("Safety violations (%)")
     light_y_grid(ax)
     ax.legend(
         loc="upper left",

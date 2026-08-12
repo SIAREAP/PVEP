@@ -32,7 +32,7 @@ Figure regeneration writes:
 - `paper/fig3_tv.pdf`
 - `paper/fig4_rotor.pdf`
 - `paper/fig5_coverage_scaling.pdf`
-- `paper/fig6_scope_intervention.pdf` (Supplementary Information)
+- `paper/fig6_scope_intervention.pdf` (Supplementary belief-support intervention)
 - `paper/figure_scripts/figure_data_audit.json`
 
 The representative overview composites used in panel a of Figs. 2--4 are

@@ -12,15 +12,15 @@
 | Fig. 4d/e, rotor method comparison | `results/rotor/table1_main_5_methods.csv` | `gen_fig4_rotor.py` |
 | Fig. 5a, interface coverage | `results/ariac/vocabulary_coverage_variants.csv` | `gen_fig5_coverage_scaling.py` |
 | Fig. 5b/c, flat-versus-bounded scaling | `results/ariac/flat_scaling_q200_q2000_raw.csv` | `gen_fig5_coverage_scaling.py` |
-| Supplementary scope intervention | `results/rotor/rotor_scope2x2.csv` | `gen_fig6_scope_intervention.py` |
+| Supplementary belief-support intervention | `results/rotor/rotor_scope2x2.csv` | `gen_fig6_scope_intervention.py` |
 | ARIAC initial admissibility, $Q_0=0.345$ | `results/ariac/ariac_q0_definition_audit.csv` | `recompute_ariac_q0.py` |
 
 `paper/figure_scripts/audit_figure_data.py` independently loads every plotted
 table, recomputes aggregates and inferential checks, checks the canonical
 20-seed scaling slice, and records SHA-256 hashes for every figure input.
 
-In Fig. 5a, the raw `exact_paraphrase` condition is displayed as **Canonical
-reordering**. The LLM-parser series is omitted because its five results exactly
+In Fig. 5a, the raw `exact_paraphrase` condition is displayed as
+**Canonical-vocabulary paraphrase**. The LLM-parser series is omitted because its five results exactly
 match the VLM series. In Fig. 5b/c, flat planning exposes all subgoals and
 actions to one belief tree, whereas bounded compilation solves one active
 subgoal at a time. Both formulations receive the same horizon
@@ -34,7 +34,8 @@ The `112/120` state-decision result is a descriptive hole-level diagnostic;
 no Wilson interval assuming independent holes is attached. In the rotor
 corruption sweep, the same 90 trial identities repeat across four conditions.
 The release therefore reports a per-condition `0/90` Wilson upper endpoint
-(about 4.1%) and treats `0/360` only as a descriptive pooled event count.
+(about 4.1%) and treats `0/360` observed safety violations only as a
+descriptive pooled count.
 
 Figs. 2--4 use consistent method encodings without redundant global legends:
 Heuristic/grey circle, FM/red cross, FM +
@@ -112,7 +113,7 @@ described as deterministic.
 - `pvep/kinova/fasten_pomdp.py`: fastening state/action/observation/cost model.
 - `pvep/kinova/screw_hybrid_controller.py`: fastening controller.
 - `pvep/sleeve/sleeve_pomdp_template.py`: thermal-domain POMDP.
-- `pvep/sleeve/run_scope2x2_experiment.py`: controlled scope intervention.
+- `pvep/sleeve/run_scope2x2_experiment.py`: controlled belief-support intervention; the action set is unchanged.
 
 ## Restricted assets
 

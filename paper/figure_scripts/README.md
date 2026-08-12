@@ -38,21 +38,22 @@ curated trial-level files under `results/`.
   - panels b/c: `results/rotor/table2_perturbation_sweep.csv`
   - panels d/e: `results/rotor/table1_main_5_methods.csv`
   - the displayed **Heuristic** row retains raw prefix `human`
+  - panel d plots the safety-violation rate directly
   - the same 90 trial identities repeat across the four corruption levels;
-    `0/360` is descriptive, while the zero-event Wilson upper endpoint is
+    `0/360` observed safety violations is a descriptive pooled count, while the zero-event Wilson upper endpoint is
     computed separately at `n=90`
 - **Fig. 5 — interface coverage and bounded scaling
   (`fig5_coverage_scaling.pdf`)**
   - panel a: `results/ariac/vocabulary_coverage_variants.csv`
-  - the raw `exact_paraphrase` condition is displayed as **Canonical
-    reordering**; the omitted LLM-parser series exactly overlaps VLM grounding
+  - the raw `exact_paraphrase` condition is displayed as
+    **Canonical-vocabulary paraphrase**; the omitted LLM-parser series exactly overlaps VLM grounding
     in all five forms
   - panels b/c: canonical slice of
     `results/ariac/flat_scaling_q200_q2000_raw.csv`, defined by
     `horizon = 8 * task_size + 4` and `latent_variables = task_size`
   - flat exposes every subgoal to one belief tree; bounded compiles one active
     subgoal at a time. Both use the same horizon and query budgets
-- **Supplementary scope intervention (`fig6_scope_intervention.pdf`)**
+- **Supplementary belief-support intervention (`fig6_scope_intervention.pdf`)**
   - `results/rotor/rotor_scope2x2.csv`
 
 ## Shared visual encoding in Figs. 2--4
