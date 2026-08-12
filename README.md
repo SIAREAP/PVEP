@@ -1,7 +1,7 @@
 # PVEP reproduction repository
 
-This repository accompanies **Verifier-Enforced Belief-Space Planning with
-Foundation Model Proposals in Industrial Task Models**. It contains curated
+This repository accompanies **Verifier-Enforced Belief Space Planning for
+Foundation Model Proposals across Industrial Robot Tasks**. It contains curated
 trial-level result tables, deterministic analysis and figure-regeneration
 scripts, and reference implementations of the planners, verifiers, and domain
 models used in the released analyses.
